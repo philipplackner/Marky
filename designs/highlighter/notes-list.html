@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marky notes list</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:ital,wght@0,400..800;1,400;1,700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ds.css">
+<link rel="stylesheet" href="site.css">
+</head>
+<body data-page="list">
+
+<main class="wrap">
+  <header class="page-intro">
+    <h1>Notes list</h1>
+    <p>The home screen. Pinned notes sit on top as yellow tiles, then all other notes by last edit. From here users create, import, search and open notes. Tap a note or the search field to jump to that feature.</p>
+    <nav class="jump"><a href="#main">Main states</a><a href="#empty">Empty &amp; first launch</a><a href="#import">Import</a></nav>
+  </header>
+
+  <!-- ============ MAIN ============ -->
+  <section class="doc-section" id="main">
+    <h2>Main states</h2>
+    <div class="phones">
+
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div class="bar"><span class="spacer"></span><button class="icon-btn" aria-label="Import .md file"><svg class="ico"><use href="#i-import"/></svg></button></div>
+          <div class="big-title">Notes</div>
+          <div class="field search-entry" data-href="search.html"><svg class="ico"><use href="#i-search"/></svg><span class="ph">Search notes</span></div>
+          <div class="scroll">
+            <div class="section-label">Pinned</div>
+            <div class="pins">
+              <div class="tile"><svg class="ico pin-mark"><use href="#i-pin"/></svg><h3>Weekly groceries</h3><p>Oat milk, lemons, sourdough, chickpeas</p><time>1 h</time></div>
+              <div class="tile"><svg class="ico pin-mark"><use href="#i-pin"/></svg><h3>Reading list</h3><p>The Overstory, Klara and the Sun, Dune</p><time>3 d</time></div>
+            </div>
+            <div class="section-label">Recent</div>
+            <div class="row" data-href="note.html"><h3>Trip to Lisbon</h3><time>4 min</time><p>Flights are booked. Still need the tram pass and a rain jacket.</p></div>
+            <div class="row"><h3>Q4 roadmap call</h3><time>2 h</time><p>Ship search before import. Ana owns the empty states.</p></div>
+            <div class="row"><h3>Welcome to Marky</h3><time>2 d</time><p>Write in Markdown, read it formatted.</p></div>
+            <div class="row"><h3>Gift ideas</h3><time>1 w</time><p>The blue tiles from Lisbon for Ana, a cookbook for Dad.</p></div>
+            <div class="row"><h3>Running plan</h3><time>12 Aug</time><p>Three easy runs, one long run on Sunday.</p></div>
+            <div style="height:100px"></div>
+          </div>
+          <button class="btn btn-primary fab fab-float"><svg class="ico"><use href="#i-plus"/></svg>New note</button>
+        </div></div>
+        <figcaption><strong>Default</strong><span>Two pinned notes, recent notes below. The list scrolls under the floating New note button.</span></figcaption>
+      </figure>
+
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div class="bar collapsed"><span class="bar-title">Notes</span><div class="bar-actions"><button class="icon-btn plain" aria-label="Search" data-href="search.html"><svg class="ico"><use href="#i-search"/></svg></button><button class="icon-btn plain" aria-label="Import .md file"><svg class="ico"><use href="#i-import"/></svg></button></div></div>
+          <div class="scroll">
+            <div class="row"><h3>Welcome to Marky</h3><time>2 d</time><p>Write in Markdown, read it formatted.</p></div>
+            <div class="row"><h3>Gift ideas</h3><time>1 w</time><p>The blue tiles from Lisbon for Ana, a cookbook for Dad.</p></div>
+            <div class="row"><h3>Running plan</h3><time>12 Aug</time><p>Three easy runs, one long run on Sunday.</p></div>
+            <div class="row untitled"><h3>Untitled</h3><time>9 Aug</time><p>Call the landlord about the boiler before Friday.</p></div>
+            <div class="row"><h3>Book club questions</h3><time>2 Aug</time><p>Why does the narrator never say her name?</p></div>
+            <div class="row"><h3>Apartment viewing</h3><time>28 Jul</time><p>Bright, quiet street, but the kitchen is tiny.</p></div>
+            <div class="row"><h3>Packing for camping</h3><time>14 Jul</time><p>Tent, two sleeping mats, the small stove.</p></div>
+            <div class="row"><h3>Empty note</h3><time>3 Jul</time><p style="color:var(--faint)">No text yet</p></div>
+            <div class="row"><h3>Podcast notes</h3><time>21 Jun</time><p>Episode 42 on habit stacking was the good one.</p></div>
+            <div style="height:100px"></div>
+          </div>
+          <button class="btn btn-primary fab fab-float"><svg class="ico"><use href="#i-plus"/></svg>New note</button>
+        </div></div>
+        <figcaption><strong>Scrolled</strong><span>The large title collapses into the bar and search becomes an icon. Shows older dates, an untitled note and a note without text.</span></figcaption>
+      </figure>
+
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div class="bar"><span class="spacer"></span><button class="icon-btn" aria-label="Import .md file"><svg class="ico"><use href="#i-import"/></svg></button></div>
+          <div class="big-title">Notes</div>
+          <div class="field search-entry" data-href="search.html"><svg class="ico"><use href="#i-search"/></svg><span class="ph">Search notes</span></div>
+          <div class="scroll">
+            <div class="section-label">Pinned</div>
+            <div class="pins">
+              <div class="tile"><svg class="ico pin-mark"><use href="#i-pin"/></svg><h3>Weekly groceries</h3><p>Oat milk, lemons, sourdough, chickpeas</p><time>1 h</time></div>
+              <div class="tile"><svg class="ico pin-mark"><use href="#i-pin"/></svg><h3>Reading list</h3><p>The Overstory, Klara and the Sun, Dune</p><time>3 d</time></div>
+              <div class="tile untitled"><svg class="ico pin-mark"><use href="#i-pin"/></svg><h3>Untitled</h3><p>Door code 4471, bins go out on Tuesday</p><time>1 w</time></div>
+              <div class="tile"><svg class="ico pin-mark"><use href="#i-pin"/></svg><h3>Index</h3><p>Where everything lives</p><time>3 w</time></div>
+            </div>
+            <div class="section-label">Recent</div>
+            <div class="row" data-href="note.html"><h3>Trip to Lisbon</h3><time>4 min</time><p>Flights are booked. Still need the tram pass and a rain jacket.</p></div>
+            <div class="row"><h3>Q4 roadmap call</h3><time>2 h</time><p>Ship search before import. Ana owns the empty states.</p></div>
+            <div class="row"><h3>Gift ideas</h3><time>1 w</time><p>The blue tiles from Lisbon for Ana, a cookbook for Dad.</p></div>
+            <div style="height:100px"></div>
+          </div>
+          <button class="btn btn-primary fab fab-float"><svg class="ico"><use href="#i-plus"/></svg>New note</button>
+        </div></div>
+        <figcaption><strong>Many pinned notes</strong><span>Tiles scroll sideways. The cut-off third tile shows there is more. Pinned notes are also sorted by last edit.</span></figcaption>
+      </figure>
+
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div class="bar"><span class="spacer"></span><button class="icon-btn" aria-label="Import .md file"><svg class="ico"><use href="#i-import"/></svg></button></div>
+          <div class="big-title">Notes</div>
+          <div class="field search-entry" data-href="search.html"><svg class="ico"><use href="#i-search"/></svg><span class="ph">Search notes</span></div>
+          <div class="scroll">
+            <div class="row" data-href="note.html"><h3>Trip to Lisbon</h3><time>4 min</time><p>Flights are booked. Still need the tram pass and a rain jacket.</p></div>
+            <div class="row"><h3>Weekly groceries</h3><time>1 h</time><p>Oat milk, lemons, sourdough, chickpeas.</p></div>
+            <div class="row"><h3>Q4 roadmap call</h3><time>2 h</time><p>Ship search before import. Ana owns the empty states.</p></div>
+            <div class="row"><h3>Welcome to Marky</h3><time>2 d</time><p>Write in Markdown, read it formatted.</p></div>
+            <div class="row"><h3>Reading list</h3><time>3 d</time><p>The Overstory, Klara and the Sun, Dune.</p></div>
+            <div class="row"><h3>Gift ideas</h3><time>1 w</time><p>The blue tiles from Lisbon for Ana, a cookbook for Dad.</p></div>
+            <div class="row"><h3>Running plan</h3><time>12 Aug</time><p>Three easy runs, one long run on Sunday.</p></div>
+            <div style="height:100px"></div>
+          </div>
+          <button class="btn btn-primary fab fab-float"><svg class="ico"><use href="#i-plus"/></svg>New note</button>
+        </div></div>
+        <figcaption><strong>No pinned notes</strong><span>The tile row and both section labels are left out. The list starts directly under search.</span></figcaption>
+      </figure>
+
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div class="bar"><span class="spacer"></span><button class="icon-btn" aria-label="Import .md file"><svg class="ico"><use href="#i-import"/></svg></button></div>
+          <div class="big-title">Notes</div>
+          <div class="field search-entry" data-href="search.html"><svg class="ico"><use href="#i-search"/></svg><span class="ph">Search notes</span></div>
+          <div class="scroll">
+            <div class="section-label">Pinned</div>
+            <div class="pins">
+              <div class="tile"><svg class="ico pin-mark"><use href="#i-pin"/></svg><h3>Weekly groceries</h3><p>Oat milk, lemons, sourdough, chickpeas</p><time>1 h</time></div>
+              <div class="tile is-pressed"><svg class="ico pin-mark"><use href="#i-pin"/></svg><h3>Reading list</h3><p>The Overstory, Klara and the Sun, Dune</p><time>3 d</time></div>
+            </div>
+            <div class="section-label">Recent</div>
+            <div class="row"><h3>Trip to Lisbon</h3><time>4 min</time><p>Flights are booked. Still need the tram pass and a rain jacket.</p></div>
+            <div class="row is-pressed"><h3>Q4 roadmap call</h3><time>2 h</time><p>Ship search before import. Ana owns the empty states.</p></div>
+            <div class="row"><h3>Welcome to Marky</h3><time>2 d</time><p>Write in Markdown, read it formatted.</p></div>
+            <div style="height:100px"></div>
+          </div>
+          <button class="btn btn-primary fab fab-float is-pressed"><svg class="ico"><use href="#i-plus"/></svg>New note</button>
+        </div></div>
+        <figcaption><strong>Pressed states</strong><span>Tile, row and FAB on touch-down, shown together for reference. Only one is pressed at a time in the app.</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ EMPTY ============ -->
+  <section class="doc-section" id="empty">
+    <h2>Empty &amp; first launch</h2>
+    <p>New users never see an empty list: the app ships with sample notes. The empty state appears only after all notes are deleted.</p>
+    <div class="phones">
+
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div class="bar"><span class="spacer"></span><button class="icon-btn" aria-label="Import .md file"><svg class="ico"><use href="#i-import"/></svg></button></div>
+          <div class="big-title">Notes</div>
+          <div class="field search-entry" data-href="search.html"><svg class="ico"><use href="#i-search"/></svg><span class="ph">Search notes</span></div>
+          <div class="scroll">
+            <div class="section-label">Pinned</div>
+            <div class="pins">
+              <div class="tile"><svg class="ico pin-mark"><use href="#i-pin"/></svg><h3>Welcome to Marky</h3><p>Start here. Write in Markdown, read it formatted.</p><time>Just now</time></div>
+            </div>
+            <div class="section-label">Recent</div>
+            <div class="row"><h3>Markdown basics</h3><time>Just now</time><p>Headings, bold, italic, lists and links in one page.</p></div>
+            <div class="row"><h3>A sample checklist</h3><time>Just now</time><p>Switch to Read and tick the boxes.</p></div>
+            <div class="row"><h3>Import and export</h3><time>Just now</time><p>Bring in any .md file, or take a note to another app.</p></div>
+            <div style="height:100px"></div>
+          </div>
+          <button class="btn btn-primary fab fab-float"><svg class="ico"><use href="#i-plus"/></svg>New note</button>
+        </div></div>
+        <figcaption><strong>First launch</strong><span>Four sample notes. "Welcome to Marky" is pinned so it's the first thing people open.</span></figcaption>
+      </figure>
+
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div class="bar"><span class="spacer"></span><button class="icon-btn" aria-label="Import .md file"><svg class="ico"><use href="#i-import"/></svg></button></div>
+          <div class="big-title">Notes</div>
+          <div class="field search-entry" data-href="search.html"><svg class="ico"><use href="#i-search"/></svg><span class="ph">Search notes</span></div>
+          <div class="grow">
+            <div class="empty">
+              <svg class="illus" viewBox="0 0 120 96"><rect class="paper ink" x="34" y="8" width="52" height="72" rx="8"/><path class="swash" d="M42 50l36-3"/><path class="ink" d="M44 26h32M44 38h22M44 50h28M44 62h16"/></svg>
+              <h2>No notes yet</h2>
+              <p>Write your first note, or bring one in from another app as a .md file.</p>
+              <div class="actions"><button class="btn btn-primary"><svg class="ico"><use href="#i-plus"/></svg>New note</button><button class="btn btn-text"><svg class="ico ico-20"><use href="#i-import"/></svg>Import .md file</button></div>
+            </div>
+          </div>
+        </div></div>
+        <figcaption><strong>No notes</strong><span>The FAB is hidden; the empty state carries both actions. Search stays, so the layout doesn't jump when the first note appears.</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ IMPORT ============ -->
+  <section class="doc-section" id="import">
+    <h2>Import</h2>
+    <p>The import button opens the system file picker for a single .md file. Users stay on the list the whole time.</p>
+    <div class="phones">
+
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div class="bar"><span class="spacer"></span><button class="icon-btn" aria-label="Import .md file"><svg class="ico"><use href="#i-import"/></svg></button></div>
+          <div class="big-title">Notes</div>
+          <div class="field search-entry" data-href="search.html"><svg class="ico"><use href="#i-search"/></svg><span class="ph">Search notes</span></div>
+          <div class="scroll">
+            <div class="section-label">Pinned</div>
+            <div class="pins">
+              <div class="tile"><svg class="ico pin-mark"><use href="#i-pin"/></svg><h3>Weekly groceries</h3><p>Oat milk, lemons, sourdough, chickpeas</p><time>1 h</time></div>
+              <div class="tile"><svg class="ico pin-mark"><use href="#i-pin"/></svg><h3>Reading list</h3><p>The Overstory, Klara and the Sun, Dune</p><time>3 d</time></div>
+            </div>
+            <div class="section-label">Recent</div>
+            <div class="row is-new"><h3>Ideas</h3><time>Just now</time><p>Half-baked app ideas, collected on the train.</p></div>
+            <div class="row" data-href="note.html"><h3>Trip to Lisbon</h3><time>4 min</time><p>Flights are booked. Still need the tram pass and a rain jacket.</p></div>
+            <div class="row"><h3>Q4 roadmap call</h3><time>2 h</time><p>Ship search before import. Ana owns the empty states.</p></div>
+            <div class="row"><h3>Ideas</h3><time>3 w</time><p>Older ideas list. Same title, different note.</p></div>
+            <div style="height:100px"></div>
+          </div>
+          <button class="btn btn-primary fab fab-float"><svg class="ico"><use href="#i-plus"/></svg>New note</button>
+        </div></div>
+        <figcaption><strong>Imported</strong><span>"ideas.md" becomes "Ideas" at the top of the unpinned notes, soft yellow for 2 seconds. A second "Ideas" can exist; nothing is overwritten.</span></figcaption>
+      </figure>
+
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div class="bar"><span class="spacer"></span><button class="icon-btn" aria-label="Import .md file"><svg class="ico"><use href="#i-import"/></svg></button></div>
+          <div class="big-title">Notes</div>
+          <div class="field search-entry" data-href="search.html"><svg class="ico"><use href="#i-search"/></svg><span class="ph">Search notes</span></div>
+          <div class="scroll">
+            <div class="section-label">Pinned</div>
+            <div class="pins">
+              <div class="tile"><svg class="ico pin-mark"><use href="#i-pin"/></svg><h3>Weekly groceries</h3><p>Oat milk, lemons, sourdough, chickpeas</p><time>1 h</time></div>
+              <div class="tile"><svg class="ico pin-mark"><use href="#i-pin"/></svg><h3>Reading list</h3><p>The Overstory, Klara and the Sun, Dune</p><time>3 d</time></div>
+            </div>
+            <div class="section-label">Recent</div>
+            <div class="row" data-href="note.html"><h3>Trip to Lisbon</h3><time>4 min</time><p>Flights are booked. Still need the tram pass and a rain jacket.</p></div>
+            <div class="row"><h3>Q4 roadmap call</h3><time>2 h</time><p>Ship search before import. Ana owns the empty states.</p></div>
+            <div class="row"><h3>Welcome to Marky</h3><time>2 d</time><p>Write in Markdown, read it formatted.</p></div>
+            <div class="row"><h3>Gift ideas</h3><time>1 w</time><p>The blue tiles from Lisbon for Ana, a cookbook for Dad.</p></div>
+            <div style="height:100px"></div>
+          </div>
+          <div class="snackbar snackbar-float above-fab"><span class="msg">Couldn't import "recipes.pdf". Choose a .md file.</span><button class="action">Choose file</button></div>
+          <button class="btn btn-primary fab fab-float"><svg class="ico"><use href="#i-plus"/></svg>New note</button>
+        </div></div>
+        <figcaption><strong>Import failed: wrong file type</strong><span>Snackbar above the FAB for 6 seconds. "Choose file" opens the picker again.</span></figcaption>
+      </figure>
+
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div class="bar"><span class="spacer"></span><button class="icon-btn" aria-label="Import .md file"><svg class="ico"><use href="#i-import"/></svg></button></div>
+          <div class="big-title">Notes</div>
+          <div class="field search-entry" data-href="search.html"><svg class="ico"><use href="#i-search"/></svg><span class="ph">Search notes</span></div>
+          <div class="scroll">
+            <div class="section-label">Pinned</div>
+            <div class="pins">
+              <div class="tile"><svg class="ico pin-mark"><use href="#i-pin"/></svg><h3>Weekly groceries</h3><p>Oat milk, lemons, sourdough, chickpeas</p><time>1 h</time></div>
+              <div class="tile"><svg class="ico pin-mark"><use href="#i-pin"/></svg><h3>Reading list</h3><p>The Overstory, Klara and the Sun, Dune</p><time>3 d</time></div>
+            </div>
+            <div class="section-label">Recent</div>
+            <div class="row" data-href="note.html"><h3>Trip to Lisbon</h3><time>4 min</time><p>Flights are booked. Still need the tram pass and a rain jacket.</p></div>
+            <div class="row"><h3>Q4 roadmap call</h3><time>2 h</time><p>Ship search before import. Ana owns the empty states.</p></div>
+            <div class="row"><h3>Welcome to Marky</h3><time>2 d</time><p>Write in Markdown, read it formatted.</p></div>
+            <div class="row"><h3>Gift ideas</h3><time>1 w</time><p>The blue tiles from Lisbon for Ana, a cookbook for Dad.</p></div>
+            <div style="height:100px"></div>
+          </div>
+          <div class="snackbar snackbar-float above-fab"><span class="msg">Couldn't read "ideas.md". The file may be damaged.</span></div>
+          <button class="btn btn-primary fab fab-float"><svg class="ico"><use href="#i-plus"/></svg>New note</button>
+        </div></div>
+        <figcaption><strong>Import failed: unreadable file</strong><span>For files that can't be read or aren't text. No action, disappears after 4 seconds.</span></figcaption>
+      </figure>
+    </div>
+  </section>
+</main>
+
+<script src="site.js"></script>
+</body>
+</html>
