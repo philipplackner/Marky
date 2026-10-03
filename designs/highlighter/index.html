@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marky design system</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Figtree:ital,wght@0,300..900;1,300..900&family=JetBrains+Mono:ital,wght@0,100..800;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ds.css">
+<link rel="stylesheet" href="site.css">
+<style>
+  .family { display: flex; flex-direction: column; gap: 14px; }
+  .family .aa { font-size: 72px; line-height: 1; }
+  .family h4 { font: 700 18px/1.2 "Bricolage Grotesque", sans-serif; }
+  .family .role { color: var(--page-muted); font-size: 14.5px; }
+  .family dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; font-size: 14px; }
+  .family dt { color: var(--page-muted); }
+  .weights { display: flex; flex-wrap: wrap; gap: 6px; }
+  .weights span { font-size: 15px; padding: 4px 9px; border-radius: 8px; border: 1px solid var(--page-rule); color: var(--page-muted); }
+  .weights span.used { background: var(--page-accent); border-color: var(--page-accent); color: #1E1B2E; }
+  .scale td:first-child { white-space: nowrap; }
+  .scale .sample { color: var(--page-ink); }
+  .swatch { display: flex; align-items: center; gap: 10px; font: 400 13px/1.2 "JetBrains Mono", monospace; }
+  .swatch i { width: 36px; height: 36px; border-radius: 10px; border: 1px solid rgba(127, 127, 127, .35); flex: none; background-image: linear-gradient(45deg, rgba(127,127,127,.18) 25%, transparent 25%, transparent 75%, rgba(127,127,127,.18) 75%), linear-gradient(45deg, rgba(127,127,127,.18) 25%, transparent 25%, transparent 75%, rgba(127,127,127,.18) 75%); background-size: 10px 10px; background-position: 0 0, 5px 5px; position: relative; overflow: hidden; }
+  .swatch i b { position: absolute; inset: 0; }
+  .tok { font: 600 13.5px/1.2 "JetBrains Mono", monospace; }
+  .tok small { display: block; font-weight: 400; color: var(--page-muted); margin-top: 3px; font-size: 12px; }
+  .ratio { font: 600 13px/1 "JetBrains Mono", monospace; padding: 4px 8px; border-radius: 6px; }
+  .ratio.ok { background: color-mix(in srgb, #2E9E5B 18%, transparent); }
+  .ratio.lg { background: color-mix(in srgb, #E0A400 22%, transparent); }
+  .ratio.deco { background: color-mix(in srgb, var(--page-ink) 8%, transparent); }
+  .pair { display: inline-flex; align-items: center; justify-content: center; width: 72px; height: 32px; border-radius: 8px; font: 700 14px/1 "Figtree", sans-serif; border: 1px solid rgba(127,127,127,.25); }
+  .spacing { display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-end; }
+  .spacing div { display: flex; flex-direction: column; gap: 8px; align-items: center; font-size: 13px; color: var(--page-muted); }
+  .spacing b { display: block; background: var(--page-accent); height: 24px; border-radius: 3px; }
+  .radii { display: flex; flex-wrap: wrap; gap: 18px; }
+  .radii div { display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: var(--page-muted); }
+  .radii b { width: 76px; height: 56px; border: 2px solid var(--page-ink); border-right: 0; border-bottom: 0; }
+  .elev { display: flex; flex-wrap: wrap; gap: 28px; }
+  .elev > div { display: flex; flex-direction: column; gap: 12px; font-size: 13px; color: var(--muted); }
+  .elev b { display: block; width: 150px; height: 80px; border-radius: 16px; background: var(--raised); }
+  .icons { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 8px; }
+  .icons div { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 6px 10px; border-radius: 12px; background: var(--surface); font: 400 11.5px/1.2 "JetBrains Mono", monospace; color: var(--muted); }
+  .icons .ico { color: var(--ink); }
+  .icon-sizes { display: flex; gap: 22px; align-items: flex-end; margin-top: 18px; }
+  .icon-sizes div { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+  .md-table td.mk { background: var(--bg); }
+  .md-table .editor, .md-table .md { padding: 0; }
+  .md-table td { width: 36%; }
+  .md-table td:first-child, .md-table td:last-child { width: 14%; color: var(--page-muted); font-size: 14px; }
+  .rules li { margin: 0 0 10px 18px; }
+  .rules li::marker { color: var(--page-muted); }
+  .rules strong { font-weight: 700; }
+</style>
+</head>
+<body data-page="system">
+
+<main class="wrap">
+  <header class="page-intro">
+    <h1>Design system</h1>
+    <p>Marky "Highlighter": white paper, chunky headings and one highlighter yellow. Every screen in this site is built only from the tokens and components on this page. Each component is shown in the light and the dark theme, with all its states.</p>
+    <nav class="jump">
+      <a href="#principles">Principles</a><a href="#type">Typography</a><a href="#color">Color</a><a href="#shape">Spacing &amp; shape</a><a href="#icons">Icons</a><a href="#components">Components</a><a href="#markdown">Markdown nodes</a><a href="#content">Content &amp; platform</a>
+    </nav>
+  </header>
+
+  <!-- ================= PRINCIPLES ================= -->
+  <section class="doc-section" id="principles">
+    <h2>Principles</h2>
+    <div class="grid cols-3" style="margin-top:18px">
+      <div class="card"><h3 class="t">Yellow means "this matters"</h3><p style="color:var(--page-muted);margin-top:6px">Highlight is reserved for pinned notes, checked items, the active tool, H2s, link underlines and search matches. Never use it as decoration or as a plain background.</p></div>
+      <div class="card"><h3 class="t">Words in front of syntax</h3><p style="color:var(--page-muted);margin-top:6px">In Write mode the Markdown characters fade to a faint grey and the text keeps its weight and size, so the note reads well even before you switch to Read.</p></div>
+      <div class="card"><h3 class="t">One dark action per screen</h3><p style="color:var(--page-muted);margin-top:6px">The inverse (dark ink) pill is the main action: New note, Delete in the dialog, the selected mode. Everything else sits on the soft grey surface.</p></div>
+    </div>
+  </section>
+
+  <!-- ================= TYPOGRAPHY ================= -->
+  <section class="doc-section" id="type">
+    <h2>Typography</h2>
+    <p>Three families, all free under the SIL Open Font License and available on Google Fonts. Bundle them as font resources in the app; don't rely on system fonts. Highlighted weights are the ones the app uses; ship only those files.</p>
+
+    <div class="grid cols-3" style="margin-top:18px">
+      <div class="card family">
+        <div class="aa" style="font-family:'Bricolage Grotesque';font-weight:800">Aa</div>
+        <div><h4>Bricolage Grotesque</h4><div class="role">Display and headings: screen titles, note titles, row titles, Markdown headings, dialog and empty-state titles.</div></div>
+        <dl><dt>Axes</dt><dd>Weight 200–800, width 75–100, optical size 12–96</dd><dt>Styles</dt><dd>Upright only</dd><dt>Optical size</dt><dd>Auto (matches the font size)</dd></dl>
+        <div class="weights" style="font-family:'Bricolage Grotesque'">
+          <span style="font-weight:200">200</span><span style="font-weight:300">300</span><span style="font-weight:400">400</span><span style="font-weight:500">500</span><span style="font-weight:600">600</span><span class="used" style="font-weight:700">700 Bold</span><span class="used" style="font-weight:800">800 ExtraBold</span>
+        </div>
+      </div>
+      <div class="card family">
+        <div class="aa" style="font-family:'Figtree';font-weight:600">Aa</div>
+        <div><h4>Figtree</h4><div class="role">Everything else: note text in both modes, previews, labels, buttons, fields, menus, snackbars.</div></div>
+        <dl><dt>Axes</dt><dd>Weight 300–900</dd><dt>Styles</dt><dd>Upright and italic</dd><dt>Italic</dt><dd>Used for <em>*italic*</em> in notes (400 and 700)</dd></dl>
+        <div class="weights" style="font-family:'Figtree'">
+          <span style="font-weight:300">300</span><span class="used" style="font-weight:400">400 Regular</span><span class="used" style="font-style:italic">400 Italic</span><span class="used" style="font-weight:500">500 Medium</span><span class="used" style="font-weight:600">600 SemiBold</span><span class="used" style="font-weight:700">700 Bold</span><span class="used" style="font-weight:700;font-style:italic">700 Italic</span><span class="used" style="font-weight:800">800 ExtraBold</span><span style="font-weight:900">900</span>
+        </div>
+      </div>
+      <div class="card family">
+        <div class="aa" style="font-family:'JetBrains Mono';font-weight:400">Aa</div>
+        <div><h4>JetBrains Mono</h4><div class="role">Code only: code blocks, inline code, and code lines in Write mode.</div></div>
+        <dl><dt>Axes</dt><dd>Weight 100–800</dd><dt>Styles</dt><dd>Upright and italic</dd><dt>Ligatures</dt><dd>Off, so code shows exactly what was typed</dd></dl>
+        <div class="weights" style="font-family:'JetBrains Mono'">
+          <span style="font-weight:100">100</span><span style="font-weight:300">300</span><span class="used" style="font-weight:400">400 Regular</span><span style="font-weight:500">500</span><span style="font-weight:700">700</span><span style="font-weight:800">800</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-sub">
+      <h3>Type scale</h3>
+      <p>Sizes are in sp/pt. Line heights are fixed values, not multipliers. Tracking is given as a share of the font size.</p>
+      <div class="table-scroll">
+      <table class="doc scale">
+        <thead><tr><th>Token</th><th>Sample</th><th>Font</th><th>Size / line</th><th>Tracking</th><th>Used for</th></tr></thead>
+        <tbody>
+          <tr><td class="tok">display</td><td class="sample t-display">Notes</td><td>Bricolage 800</td><td>36 / 40</td><td>-3%</td><td>Notes list title</td></tr>
+          <tr><td class="tok">titleLarge</td><td class="sample t-title-l">Trip to Lisbon</td><td>Bricolage 800</td><td>28 / 32</td><td>-2%</td><td>Note title field</td></tr>
+          <tr><td class="tok">titleMedium</td><td class="sample t-title-m">No notes yet</td><td>Bricolage 800</td><td>22 / 28</td><td>-1%</td><td>Dialog title, empty-state title</td></tr>
+          <tr><td class="tok">titleSmall</td><td class="sample t-title-s">Weekly groceries</td><td>Bricolage 700</td><td>17 / 22</td><td>0</td><td>Note row, search result, collapsed bar title</td></tr>
+          <tr><td class="tok">heading1</td><td class="sample" style="font:800 24px/30px 'Bricolage Grotesque';letter-spacing:-.02em">Heading 1</td><td>Bricolage 800</td><td>24 / 30</td><td>-2%</td><td><code>#</code> in Read mode</td></tr>
+          <tr><td class="tok">heading2</td><td class="sample" style="font:800 20px/26px 'Bricolage Grotesque'">Heading 2</td><td>Bricolage 800</td><td>20 / 26</td><td>0</td><td><code>##</code> in Read mode, with the swash</td></tr>
+          <tr><td class="tok">heading3</td><td class="sample" style="font:700 17px/22px 'Bricolage Grotesque'">Heading 3</td><td>Bricolage 700</td><td>17 / 22</td><td>0</td><td><code>###</code> in Read mode</td></tr>
+          <tr><td class="tok">bodyLarge</td><td class="sample t-body-l">Flights are booked.</td><td>Figtree 400</td><td>16 / 26</td><td>0</td><td>Note text in Read mode (Write mode uses 16 / 27)</td></tr>
+          <tr><td class="tok">bodyMedium</td><td class="sample t-body-m">Oat milk, lemons, sourdough</td><td>Figtree 400</td><td>14 / 20</td><td>0</td><td>Previews, snippets, dialog and empty-state text</td></tr>
+          <tr><td class="tok">labelLarge</td><td class="sample t-label-l">New note</td><td>Figtree 600</td><td>15 / 20</td><td>0</td><td>Buttons, menu items (500)</td></tr>
+          <tr><td class="tok">labelMedium</td><td class="sample t-label-m">Pinned</td><td>Figtree 600</td><td>13 / 16</td><td>0</td><td>Section labels, Write/Read toggle</td></tr>
+          <tr><td class="tok">labelSmall</td><td class="sample t-label-s">4 min</td><td>Figtree 500</td><td>12 / 16</td><td>0</td><td>Timestamps</td></tr>
+          <tr><td class="tok">code</td><td class="sample t-code">Seat 14C</td><td>JetBrains Mono 400</td><td>13 / 21</td><td>0</td><td>Code blocks (inline code: 14)</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= COLOR ================= -->
+  <section class="doc-section" id="color">
+    <h2>Color</h2>
+    <p>The theme follows the system setting. Every color is a role token with one value per theme. The hex codes below are read live from <code>ds.css</code>, so they always match what the screens use.</p>
+    <div class="table-scroll">
+      <table class="doc" id="color-table">
+        <thead><tr><th>Token</th><th>Light</th><th>Dark</th><th>Used for</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="doc-sub">
+      <h3>Contrast</h3>
+      <p>Computed from the tokens. Text pairs meet WCAG AA (4.5:1). <code>inkFaint</code> is only used for Markdown syntax characters and disabled content, which WCAG excludes.</p>
+      <div class="table-scroll">
+        <table class="doc" id="contrast-table">
+          <thead><tr><th>Pair</th><th>Light</th><th>Light ratio</th><th>Dark</th><th>Dark ratio</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SPACING & SHAPE ================= -->
+  <section class="doc-section" id="shape">
+    <h2>Spacing &amp; shape</h2>
+    <div class="grid cols-2" style="margin-top:18px">
+      <div class="card">
+        <h3 class="t" style="margin-bottom:4px">Spacing</h3>
+        <p style="color:var(--page-muted);font-size:14px;margin-bottom:18px">4 dp grid. Screen side padding is <b>20</b>. Rows use 12 vertical, sections 22 between them.</p>
+        <div class="spacing">
+          <div><b style="width:4px"></b>4</div><div><b style="width:8px"></b>8</div><div><b style="width:12px"></b>12</div><div><b style="width:16px"></b>16</div><div><b style="width:20px"></b>20</div><div><b style="width:24px"></b>24</div><div><b style="width:32px"></b>32</div><div><b style="width:40px"></b>40</div>
+        </div>
+      </div>
+      <div class="card">
+        <h3 class="t" style="margin-bottom:4px">Corner radius</h3>
+        <p style="color:var(--page-muted);font-size:14px;margin-bottom:18px">Bigger elements get rounder corners. Anything you tap that holds a single label is a full pill.</p>
+        <div class="radii">
+          <div><b style="border-top-left-radius:6px"></b>xs 6 · inline code</div>
+          <div><b style="border-top-left-radius:12px"></b>sm 12 · tool buttons, menu items</div>
+          <div><b style="border-top-left-radius:14px"></b>md 14 · search field</div>
+          <div><b style="border-top-left-radius:16px"></b>lg 16 · quote, code, snackbar</div>
+          <div><b style="border-top-left-radius:18px"></b>xl 18 · pinned tile, menu</div>
+          <div><b style="border-top-left-radius:28px"></b>xxl 28 · dialog</div>
+          <div><b style="border-top-left-radius:40px"></b>pill · buttons, toggle</div>
+        </div>
+      </div>
+    </div>
+    <div class="doc-sub">
+      <h3>Elevation</h3>
+      <p>Only floating things cast shadows. Rows, tiles and fields are flat.</p>
+      <div class="both">
+        <div class="elev">
+          <div><b style="box-shadow:var(--shadow)"></b>shadow · FAB, snackbar</div>
+          <div><b style="box-shadow:var(--shadow-lg);border:1px solid var(--rule)"></b>shadowLarge · menu, dialog</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ICONS ================= -->
+  <section class="doc-section" id="icons">
+    <h2>Icons</h2>
+    <p>Outline icons on a 24 grid, 1.8 stroke, round caps and joins. Draw them in <code>ink</code> by default. Back and overflow icons follow the platform: chevron and horizontal dots on iOS, arrow and vertical dots on Android.</p>
+    <div class="both">
+      <div class="icons" data-icons></div>
+      <div class="icon-sizes">
+        <div><svg class="ico"><use href="#i-pin"/></svg>24 · bars, buttons</div>
+        <div><svg class="ico ico-20"><use href="#i-pin"/></svg>20 · menus, button icons</div>
+        <div><svg class="ico ico-16" style="stroke-width:2"><use href="#i-pin"/></svg>16 · pin mark on tiles</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= COMPONENTS ================= -->
+  <section class="doc-section" id="components">
+    <h2>Components</h2>
+    <p>Every reusable piece of the app. "Pressed" is the touch-down state; there is no hover on phones. Disabled elements don't react to touch.</p>
+
+    <div class="doc-sub">
+      <h3>Buttons</h3>
+      <p>Height 48 (small: 40), pill shape, labelLarge. Pressed scales to 97% and darkens. Primary for the main action, secondary for alternatives, danger only inside the delete dialog, text for low-emphasis actions.</p>
+      <div class="both">
+        <div class="states">
+          <div class="state"><button class="btn btn-primary"><svg class="ico"><use href="#i-plus"/></svg>New note</button><span class="state-name">Primary · enabled</span></div>
+          <div class="state"><button class="btn btn-primary is-pressed"><svg class="ico"><use href="#i-plus"/></svg>New note</button><span class="state-name">Pressed</span></div>
+          <div class="state"><button class="btn btn-primary" disabled><svg class="ico"><use href="#i-plus"/></svg>New note</button><span class="state-name">Disabled</span></div>
+        </div>
+        <div class="states">
+          <div class="state"><button class="btn btn-secondary"><svg class="ico"><use href="#i-import"/></svg>Import .md file</button><span class="state-name">Secondary · enabled</span></div>
+          <div class="state"><button class="btn btn-secondary is-pressed"><svg class="ico"><use href="#i-import"/></svg>Import .md file</button><span class="state-name">Pressed</span></div>
+          <div class="state"><button class="btn btn-secondary" disabled><svg class="ico"><use href="#i-import"/></svg>Import .md file</button><span class="state-name">Disabled</span></div>
+        </div>
+        <div class="states">
+          <div class="state"><button class="btn btn-danger">Delete</button><span class="state-name">Danger · enabled</span></div>
+          <div class="state"><button class="btn btn-danger is-pressed">Delete</button><span class="state-name">Pressed</span></div>
+          <div class="state"><button class="btn btn-danger" disabled>Delete</button><span class="state-name">Disabled</span></div>
+          <div class="state"><button class="btn btn-text">Cancel</button><span class="state-name">Text · enabled</span></div>
+          <div class="state"><button class="btn btn-text is-pressed">Cancel</button><span class="state-name">Pressed</span></div>
+          <div class="state"><button class="btn btn-text" disabled>Cancel</button><span class="state-name">Disabled</span></div>
+        </div>
+        <div class="states">
+          <div class="state"><button class="btn btn-primary btn-sm">Start writing</button><span class="state-name">Small primary</span></div>
+          <div class="state"><button class="btn btn-secondary btn-sm">Choose file</button><span class="state-name">Small secondary</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-sub">
+      <h3>New note button (FAB)</h3>
+      <p>Extended pill, height 54, floats 34 above the bottom edge, centered. Only on the notes list. Hidden when the list is empty, because the empty state has its own buttons.</p>
+      <div class="both">
+        <div class="states">
+          <div class="state"><button class="btn btn-primary fab"><svg class="ico"><use href="#i-plus"/></svg>New note</button><span class="state-name">Enabled</span></div>
+          <div class="state"><button class="btn btn-primary fab is-pressed"><svg class="ico"><use href="#i-plus"/></svg>New note</button><span class="state-name">Pressed</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-sub">
+      <h3>Icon buttons</h3>
+      <p>40 × 40 touch area with a 24 icon (48 effective target with spacing). Filled sits on surface; plain has no background until pressed. The pin toggle turns yellow when the note is pinned.</p>
+      <div class="both">
+        <div class="states">
+          <div class="state"><button class="icon-btn"><svg class="ico"><use href="#i-import"/></svg></button><span class="state-name">Filled</span></div>
+          <div class="state"><button class="icon-btn is-pressed"><svg class="ico"><use href="#i-import"/></svg></button><span class="state-name">Pressed</span></div>
+          <div class="state"><button class="icon-btn" disabled><svg class="ico"><use href="#i-import"/></svg></button><span class="state-name">Disabled</span></div>
+          <div class="state"><button class="icon-btn plain"><svg class="ico"><use href="#i-search"/></svg></button><span class="state-name">Plain</span></div>
+          <div class="state"><button class="icon-btn plain is-pressed"><svg class="ico"><use href="#i-search"/></svg></button><span class="state-name">Pressed</span></div>
+          <div class="state"><button class="icon-btn plain" disabled><svg class="ico"><use href="#i-search"/></svg></button><span class="state-name">Disabled</span></div>
+        </div>
+        <div class="states">
+          <div class="state"><button class="icon-btn"><svg class="ico"><use href="#i-pin"/></svg></button><span class="state-name">Pin · off</span></div>
+          <div class="state"><button class="icon-btn is-on"><svg class="ico"><use href="#i-pin"/></svg></button><span class="state-name">Pin · on</span></div>
+          <div class="state"><button class="icon-btn is-on is-pressed"><svg class="ico"><use href="#i-pin"/></svg></button><span class="state-name">On · pressed</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-sub">
+      <h3>Write / Read toggle</h3>
+      <p>Switches the note between raw Markdown and the formatted view. The selected side uses the inverse color. Tapping the selected side does nothing.</p>
+      <div class="both">
+        <div class="states">
+          <div class="state"><div class="toggle"><button class="on">Write</button><button>Read</button></div><span class="state-name">Write selected</span></div>
+          <div class="state"><div class="toggle"><button>Write</button><button class="on">Read</button></div><span class="state-name">Read selected</span></div>
+          <div class="state"><div class="toggle"><button class="on">Write</button><button class="is-pressed">Read</button></div><span class="state-name">Read pressed</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-sub">
+      <h3>Search field</h3>
+      <p>On the notes list it's an entry point that opens the search screen. On the search screen it's focused when the screen opens. The clear button appears once there is text.</p>
+      <div class="both">
+        <div class="states">
+          <div class="state" style="width:280px"><div class="field" style="width:100%"><svg class="ico"><use href="#i-search"/></svg><span class="ph">Search notes</span></div><span class="state-name">Entry · enabled</span></div>
+          <div class="state" style="width:280px"><div class="field is-pressed" style="width:100%"><svg class="ico"><use href="#i-search"/></svg><span class="ph">Search notes</span></div><span class="state-name">Entry · pressed</span></div>
+        </div>
+        <div class="states">
+          <div class="state" style="width:280px"><div class="field is-focused" style="width:100%"><svg class="ico"><use href="#i-search"/></svg><span class="ph"><span class="caret" style="margin:0 2px 0 0"></span>Search notes</span></div><span class="state-name">Focused · empty</span></div>
+          <div class="state" style="width:280px"><div class="field is-focused" style="width:100%"><svg class="ico"><use href="#i-search"/></svg><span class="val">lisbon<span class="caret"></span></span><span class="clear"><svg class="ico ico-20"><use href="#i-clear"/></svg></span></div><span class="state-name">Focused · with text</span></div>
+          <div class="state" style="width:280px"><div class="field" style="width:100%"><svg class="ico"><use href="#i-search"/></svg><span class="val">lisbon</span><span class="clear"><svg class="ico ico-20"><use href="#i-clear"/></svg></span></div><span class="state-name">Unfocused · with text</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-sub">
+      <h3>Title field</h3>
+      <p>The note title, edited in place in both modes. titleLarge, no border or background. Empty titles show "Title" as placeholder and "Untitled" in the list.</p>
+      <div class="both">
+        <div class="states">
+          <div class="state"><div class="title-field" style="padding:0"><span class="ph">Title</span></div><span class="state-name">Empty</span></div>
+          <div class="state"><div class="title-field" style="padding:0"><span class="ph"><span class="caret" style="margin:0 2px 0 0"></span>Title</span></div><span class="state-name">Empty · focused</span></div>
+          <div class="state"><div class="title-field" style="padding:0">Trip to Lisbon</div><span class="state-name">Filled</span></div>
+          <div class="state"><div class="title-field" style="padding:0">Trip to Lisbon<span class="caret"></span></div><span class="state-name">Filled · focused</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-sub">
+      <h3>Note row</h3>
+      <p>Unpinned notes. Title (one line), time since last edit, and a one-line preview of the text with Markdown removed. Divider between rows. A just-imported note stays soft yellow for 2 seconds, then fades out.</p>
+      <div class="both">
+        <div class="states">
+          <div class="state stretch"><div class="bleed"><div class="row"><h3>Trip to Lisbon</h3><time>4 min</time><p>Flights are booked. Still need the tram pass and a rain jacket.</p></div></div><span class="state-name">Enabled</span></div>
+          <div class="state stretch"><div class="bleed"><div class="row is-pressed"><h3>Trip to Lisbon</h3><time>4 min</time><p>Flights are booked. Still need the tram pass and a rain jacket.</p></div></div><span class="state-name">Pressed</span></div>
+          <div class="state stretch"><div class="bleed"><div class="row untitled"><h3>Untitled</h3><time>Yesterday</time><p>Call the landlord about the boiler before Friday.</p></div></div><span class="state-name">No title</span></div>
+          <div class="state stretch"><div class="bleed"><div class="row"><h3>Empty note</h3><time>2 d</time><p style="color:var(--faint)">No text yet</p></div></div><span class="state-name">No text</span></div>
+          <div class="state stretch"><div class="bleed"><div class="row is-new"><h3>Ideas</h3><time>Just now</time><p>Half-baked app ideas, collected on the train.</p></div></div><span class="state-name">Just imported</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-sub">
+      <h3>Pinned tile</h3>
+      <p>Pinned notes sit in a row of yellow tiles above the list. Two fit the screen; more scroll sideways. Title up to two lines, preview up to two lines, time at the bottom, pin mark top right.</p>
+      <div class="both">
+        <div class="states">
+          <div class="state"><div class="tile"><svg class="ico pin-mark"><use href="#i-pin"/></svg><h3>Reading list</h3><p>The Overstory, Klara and the Sun, Dune</p><time>3 d</time></div><span class="state-name">Enabled</span></div>
+          <div class="state"><div class="tile is-pressed"><svg class="ico pin-mark"><use href="#i-pin"/></svg><h3>Reading list</h3><p>The Overstory, Klara and the Sun, Dune</p><time>3 d</time></div><span class="state-name">Pressed</span></div>
+          <div class="state"><div class="tile untitled"><svg class="ico pin-mark"><use href="#i-pin"/></svg><h3>Untitled</h3><p>Door code 4471, bins go out on Tuesday</p><time>1 w</time></div><span class="state-name">No title</span></div>
+          <div class="state"><div class="tile"><svg class="ico pin-mark"><use href="#i-pin"/></svg><h3>Questions for the next team offsite</h3><p>Who owns onboarding?</p><time>Just now</time></div><span class="state-name">Long title</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-sub">
+      <h3>Section label</h3>
+      <p>Groups content on the list and search screens. labelMedium in muted, sentence case. Optional count on the right.</p>
+      <div class="both">
+        <div class="states">
+          <div class="state stretch"><div class="bleed"><div class="section-label" style="padding-bottom:0"><span>Pinned</span></div></div></div>
+          <div class="state stretch"><div class="bleed"><div class="section-label" style="padding-bottom:0"><span>In note text</span><span>3</span></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-sub">
+      <h3>Search result</h3>
+      <p>Title and a snippet of up to two lines, with every match marked in yellow. A title match shows the start of the note; a text match shows the text around the first match, cut with an ellipsis.</p>
+      <div class="both">
+        <div class="states">
+          <div class="state stretch"><div class="bleed"><div class="result"><h3>Trip to <mark>Lisbon</mark></h3><p>Flights are booked. Still need the tram pass and a rain jacket.</p></div></div><span class="state-name">Title match</span></div>
+          <div class="state stretch"><div class="bleed"><div class="result"><h3>Gift ideas</h3><p>…the blue tiles from <mark>Lisbon</mark> for Ana, and a cookbook for Dad.</p></div></div><span class="state-name">Text match</span></div>
+          <div class="state stretch"><div class="bleed"><div class="result is-pressed"><h3>Gift ideas</h3><p>…the blue tiles from <mark>Lisbon</mark> for Ana, and a cookbook for Dad.</p></div></div><span class="state-name">Pressed</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-sub">
+      <h3>Formatting toolbar</h3>
+      <p>Sits directly above the keyboard in Write mode. Eight buttons, always in this order. A button turns yellow when the cursor or selection is already inside that format. With text selected, B, I, code and link wrap the selection. Buttons are disabled while the title field has focus.</p>
+      <div class="both">
+        <div class="states">
+          <div class="state stretch"><div class="bleed"><div class="tb">
+            <button class="tb-btn">H</button><button class="tb-btn">B</button><button class="tb-btn"><i>I</i></button>
+            <button class="tb-btn"><svg class="ico"><use href="#i-list"/></svg></button><button class="tb-btn is-active"><svg class="ico"><use href="#i-checklist"/></svg></button>
+            <button class="tb-btn"><svg class="ico"><use href="#i-quote"/></svg></button><button class="tb-btn"><svg class="ico"><use href="#i-code"/></svg></button><button class="tb-btn"><svg class="ico"><use href="#i-link"/></svg></button>
+          </div></div><span class="state-name">Toolbar, cursor inside a checklist</span></div>
+        </div>
+        <div class="states">
+          <div class="state"><button class="tb-btn fixed">B</button><span class="state-name">Enabled</span></div>
+          <div class="state"><button class="tb-btn fixed is-pressed">B</button><span class="state-name">Pressed</span></div>
+          <div class="state"><button class="tb-btn fixed is-active">B</button><span class="state-name">Active</span></div>
+          <div class="state"><button class="tb-btn fixed" disabled>B</button><span class="state-name">Disabled</span></div>
+        </div>
+        <div class="states" style="font-size:13px;color:var(--muted);display:grid;grid-template-columns:auto 1fr;gap:6px 14px">
+          <b style="color:var(--ink)">H</b><span>Adds <code>#</code> at line start; tap again for <code>##</code>, <code>###</code>, then off</span>
+          <b style="color:var(--ink)">B · I</b><span>Wraps in <code>**</code> or <code>*</code>, or inserts a pair with the cursor inside</span>
+          <b style="color:var(--ink)">List · check · quote</b><span>Adds <code>- </code>, <code>- [ ] </code> or <code>&gt; </code> at line start; tap again to remove</span>
+          <b style="color:var(--ink)">Code</b><span>Wraps the selection or line in a <code>```</code> block</span>
+          <b style="color:var(--ink)">Link</b><span>Inserts <code>[text](https://)</code> and selects the URL part</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-sub">
+      <h3>Checkbox</h3>
+      <p>Checklist items in Read mode. Tapping ticks the item and writes <code>[x]</code> back to the Markdown. 22 dp circle inside a 44 dp touch area. Checked items turn muted but are not struck through, so they stay readable.</p>
+      <div class="both">
+        <div class="states">
+          <div class="state"><button class="cb"></button><span class="state-name">Unchecked</span></div>
+          <div class="state"><button class="cb is-pressed"></button><span class="state-name">Pressed</span></div>
+          <div class="state"><button class="cb x"></button><span class="state-name">Checked</span></div>
+          <div class="state"><button class="cb x is-pressed"></button><span class="state-name">Checked · pressed</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-sub">
+      <h3>Overflow menu</h3>
+      <p>Opens from the overflow button on the note screen. The first item depends on whether the note is pinned. Delete is separated and red.</p>
+      <div class="both">
+        <div class="states">
+          <div class="state"><div class="menu">
+            <div class="menu-item"><svg class="ico"><use href="#i-pin"/></svg>Pin note</div>
+            <div class="menu-item is-pressed"><svg class="ico"><use href="#i-export"/></svg>Export as .md</div>
+            <div class="menu-sep"></div>
+            <div class="menu-item danger"><svg class="ico"><use href="#i-trash"/></svg>Delete note</div>
+          </div><span class="state-name">Unpinned note, "Export" pressed</span></div>
+          <div class="state"><div class="menu">
+            <div class="menu-item"><svg class="ico"><use href="#i-pin-off"/></svg>Unpin note</div>
+            <div class="menu-item"><svg class="ico"><use href="#i-export"/></svg>Export as .md</div>
+            <div class="menu-sep"></div>
+            <div class="menu-item danger"><svg class="ico"><use href="#i-trash"/></svg>Delete note</div>
+          </div><span class="state-name">Pinned note</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-sub">
+      <h3>Dialog</h3>
+      <p>Only used to confirm deleting a note. Names the note. Buttons share the width; the destructive one is on the right.</p>
+      <div class="both">
+        <div class="states">
+          <div class="state" style="width:300px"><div class="dialog">
+            <h2>Delete "Trip to Lisbon"?</h2>
+            <p>The note will be removed from this device. You can't undo this.</p>
+            <div class="actions"><button class="btn btn-secondary">Cancel</button><button class="btn btn-danger">Delete</button></div>
+          </div><span class="state-name">Delete confirmation</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-sub">
+      <h3>Snackbar</h3>
+      <p>Short feedback at the bottom of the screen, above the FAB position. Stays 6 seconds with an action, 4 without. Inverse colors, so it reads as separate from the content.</p>
+      <div class="both">
+        <div class="states">
+          <div class="state stretch"><div class="snackbar"><span class="msg">Couldn't import "recipes.pdf". Choose a .md file.</span><button class="action">Choose file</button></div><span class="state-name">Import error, wrong file type</span></div>
+          <div class="state stretch"><div class="snackbar"><span class="msg">Couldn't read "ideas.md". The file may be damaged.</span></div><span class="state-name">Import error, unreadable file</span></div>
+          <div class="state stretch"><div class="snackbar"><span class="msg">Exported "Trip to Lisbon.md"</span></div><span class="state-name">Export done</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-sub">
+      <h3>Empty state</h3>
+      <p>Line illustration with one highlighter stroke, a titleMedium heading, one or two short sentences that say what to do, and up to two buttons. Centered in the free space.</p>
+      <div class="both">
+        <div class="states" style="justify-content:center">
+          <div class="state" style="align-items:center"><div class="empty">
+            <svg class="illus" viewBox="0 0 120 96"><rect class="paper ink" x="34" y="8" width="52" height="72" rx="8"/><path class="swash" d="M42 50l36-3"/><path class="ink" d="M44 26h32M44 38h22M44 50h28M44 62h16"/></svg>
+            <h2>No notes yet</h2>
+            <p>Write your first note, or bring one in from another app as a .md file.</p>
+            <div class="actions"><button class="btn btn-primary"><svg class="ico"><use href="#i-plus"/></svg>New note</button><button class="btn btn-text"><svg class="ico ico-20"><use href="#i-import"/></svg>Import .md file</button></div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-sub">
+      <h3>App bars</h3>
+      <p>Four variants. The list's large title collapses into a small centered title once the list scrolls. Bars have no background color; the collapsed one gets a bottom divider.</p>
+      <div class="both">
+        <div class="states">
+          <div class="state stretch"><div class="bleed">
+            <div class="bar"><span class="spacer"></span><button class="icon-btn"><svg class="ico"><use href="#i-import"/></svg></button></div>
+            <div class="big-title">Notes</div>
+            <div class="field search-entry"><svg class="ico"><use href="#i-search"/></svg><span class="ph">Search notes</span></div>
+          </div><span class="state-name">Notes list · expanded</span></div>
+          <div class="state stretch"><div class="bleed">
+            <div class="bar collapsed"><span class="bar-title">Notes</span><div class="bar-actions"><button class="icon-btn plain"><svg class="ico"><use href="#i-search"/></svg></button><button class="icon-btn plain"><svg class="ico"><use href="#i-import"/></svg></button></div></div>
+          </div><span class="state-name">Notes list · collapsed</span></div>
+          <div class="state stretch"><div class="bleed">
+            <div class="bar"><button class="icon-btn"><svg class="ico"><use href="#i-back"/></svg></button><span class="spacer"></span><div class="toggle"><button class="on">Write</button><button>Read</button></div><button class="icon-btn"><svg class="ico"><use href="#i-more-h"/></svg></button></div>
+          </div><span class="state-name">Note</span></div>
+          <div class="state stretch"><div class="bleed">
+            <div class="bar"><button class="icon-btn"><svg class="ico"><use href="#i-back"/></svg></button><div class="field is-focused"><svg class="ico"><use href="#i-search"/></svg><span class="val">lisbon<span class="caret"></span></span><span class="clear"><svg class="ico ico-20"><use href="#i-clear"/></svg></span></div></div>
+          </div><span class="state-name">Search</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MARKDOWN NODES ================= -->
+  <section class="doc-section" id="markdown">
+    <h2>Markdown nodes</h2>
+    <p>Each node the app supports, how it looks while writing and how it renders in Read mode. In Write mode, syntax characters use <code>inkFaint</code>; headings, bold and italic already show their weight and style.</p>
+    <div class="table-scroll">
+      <table class="doc md-table">
+        <thead><tr><th>Node</th><th>Write mode</th><th>Read mode</th><th>Toolbar</th></tr></thead>
+        <tbody>
+          <tr><td>Heading 1</td><td class="mk"><div class="editor"><span class="s"># </span><span class="h1">Lisbon</span></div></td><td class="mk"><div class="md"><h1>Lisbon</h1></div></td><td>H</td></tr>
+          <tr><td>Heading 2</td><td class="mk"><div class="editor"><span class="s">## </span><span class="h2">Packing</span></div></td><td class="mk"><div class="md"><h2><span>Packing</span></h2></div></td><td>H ×2</td></tr>
+          <tr><td>Heading 3</td><td class="mk"><div class="editor"><span class="s">### </span><span class="h3">Day one</span></div></td><td class="mk"><div class="md"><h3>Day one</h3></div></td><td>H ×3</td></tr>
+          <tr><td>Bold, italic</td><td class="mk"><div class="editor">Flights are <span class="s">**</span><b>booked</b><span class="s">**</span>, the <span class="s">*</span><i>tram pass</i><span class="s">*</span> isn't.</div></td><td class="mk"><div class="md"><p>Flights are <strong>booked</strong>, the <em>tram pass</em> isn't.</p></div></td><td>B · I</td></tr>
+          <tr><td>Inline code</td><td class="mk"><div class="editor">Booking ref <span class="s">`</span><span class="mono">X7QK2</span><span class="s">`</span></div></td><td class="mk"><div class="md"><p>Booking ref <code>X7QK2</code></p></div></td><td>Code (one line)</td></tr>
+          <tr><td>Bullet list</td><td class="mk"><div class="editor"><span class="s">- </span>Pastéis de nata
+<span class="s">- </span>Sardines</div></td><td class="mk"><div class="md"><ul class="bullets"><li>Pastéis de nata</li><li>Sardines</li></ul></div></td><td>List</td></tr>
+          <tr><td>Numbered list</td><td class="mk"><div class="editor"><span class="s">1. </span>Check in
+<span class="s">2. </span>Drop bags</div></td><td class="mk"><div class="md"><ol><li>Check in</li><li>Drop bags</li></ol></div></td><td>Typed by hand</td></tr>
+          <tr><td>Checklist</td><td class="mk"><div class="editor"><span class="s">- [x] </span>Passport
+<span class="s">- [ ] </span>Sunscreen</div></td><td class="mk"><div class="md"><ul class="check"><li class="done"><button class="cb x"></button>Passport</li><li><button class="cb"></button>Sunscreen</li></ul></div></td><td>Checklist</td></tr>
+          <tr><td>Quote</td><td class="mk"><div class="editor"><span class="s">&gt; </span>Go early, it's packed by noon.</div></td><td class="mk"><div class="md"><blockquote>Go early, it's packed by noon.</blockquote></div></td><td>Quote</td></tr>
+          <tr><td>Code block</td><td class="mk"><div class="editor"><span class="s mono">```</span>
+<span class="mono">TP 1353  Fri 08:40</span>
+<span class="s mono">```</span></div></td><td class="mk"><div class="md"><pre>TP 1353  Fri 08:40</pre></div></td><td>Code</td></tr>
+          <tr><td>Link</td><td class="mk"><div class="editor"><span class="s">[</span>Tram 28 route<span class="s">](</span><span class="url">carris.pt</span><span class="s">)</span></div></td><td class="mk"><div class="md"><p><a href="#">Tram 28 route</a></p></div></td><td>Link</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="doc-sub">
+      <h3>All nodes together</h3>
+      <p>How a full note renders in Read mode. Tap the checkboxes to try them.</p>
+      <div class="both">
+        <div class="md" style="padding:0;max-width:340px">
+          <h1>Welcome to Marky</h1>
+          <p>Write in <strong>Markdown</strong>, read it <em>formatted</em>. Use <code>Write</code> and <code>Read</code> to switch.</p>
+          <h2><span>Things to try</span></h2>
+          <ul class="check"><li class="done"><button class="cb x"></button>Open this note</li><li><button class="cb"></button>Tick this box</li></ul>
+          <ul class="bullets"><li>Pin notes you open often</li><li>Export any note as .md</li></ul>
+          <blockquote>Formatting lives in the text.</blockquote>
+          <pre># Heading
+**bold** and *italic*</pre>
+          <p><a href="#">Markdown guide</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CONTENT & PLATFORM ================= -->
+  <section class="doc-section" id="content">
+    <h2>Content &amp; platform</h2>
+    <div class="grid cols-2" style="margin-top:18px">
+      <div class="card">
+        <h3 class="t" style="margin-bottom:12px">Writing rules</h3>
+        <ul class="rules">
+          <li><strong>Time since edit:</strong> "Just now" (under 1 min), "4 min", "2 h", "Yesterday", "3 d", "1 w" (up to 4 weeks), then the date: "12 Aug", or "12 Aug 2025" in an earlier year.</li>
+          <li><strong>Missing title:</strong> show "Untitled" in muted. Export uses "Untitled.md".</li>
+          <li><strong>Previews:</strong> strip Markdown syntax, collapse line breaks, show "No text yet" for empty notes.</li>
+          <li><strong>Names in messages:</strong> note titles and file names go in straight double quotes: Delete "Trip to Lisbon"?</li>
+          <li><strong>Errors:</strong> say what failed and what to do next. No apologies, no "Oops".</li>
+          <li><strong>Case:</strong> sentence case everywhere, including buttons and menu items.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 class="t" style="margin-bottom:12px">iOS and Android</h3>
+        <ul class="rules">
+          <li><strong>One design for both.</strong> Same tokens, components and layouts. Only the items below differ.</li>
+          <li><strong>Back:</strong> chevron icon and edge swipe on iOS; arrow icon and system back gesture on Android.</li>
+          <li><strong>Overflow icon:</strong> horizontal dots on iOS, vertical dots on Android.</li>
+          <li><strong>Status bar and home indicator:</strong> system owned; draw content edge to edge and pad with the safe-area insets.</li>
+          <li><strong>Keyboard:</strong> system keyboard. The formatting toolbar is attached to the top of the keyboard and moves with it.</li>
+          <li><strong>Import and export:</strong> the system file picker and save dialog (Document Picker on iOS, Storage Access Framework on Android). The app doesn't draw its own.</li>
+          <li><strong>Pressed state:</strong> the pressed colors above on both platforms. Android may add the default ripple on top.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="mk" id="probe-light" hidden></div>
+<div class="mk dark" id="probe-dark" hidden></div>
+
+<script src="site.js"></script>
+<script>
+  const TOKENS = [
+    ["background", "--bg", "Screen background"],
+    ["raised", "--raised", "Menus and dialogs"],
+    ["surface", "--surface", "Search field, secondary buttons, tool buttons, quotes, inline code"],
+    ["surfacePressed", "--surface-press", "Pressed state of anything on surface"],
+    ["divider", "--rule", "Lines between rows, toolbar top edge"],
+    ["outline", "--outline", "Unchecked checkbox ring"],
+    ["ink", "--ink", "Main text and icons"],
+    ["inkMuted", "--muted", "Previews, snippets, timestamps, labels, placeholders"],
+    ["inkFaint", "--faint", "Markdown syntax in Write mode, disabled content, title placeholder"],
+    ["highlight", "--hl", "Pinned tiles, checked boxes, active tool, search matches, link underline"],
+    ["highlightPressed", "--hl-press", "Pressed pinned tile and pin toggle"],
+    ["highlightSoft", "--hl-soft", "Just-imported row, pressed link"],
+    ["swash", "--swash", "Marker stroke behind H2 headings"],
+    ["onHighlight", "--on-hl", "Text and icons on highlight"],
+    ["quoteMark", "--hl-deep", "Quote mark on blockquotes"],
+    ["inverse", "--inverse", "Primary buttons, FAB, selected toggle, snackbar"],
+    ["inversePressed", "--inverse-press", "Pressed primary button and FAB"],
+    ["onInverse", "--on-inverse", "Text on inverse"],
+    ["inverseAccent", "--inverse-accent", "Icons on primary buttons, snackbar action"],
+    ["codeBackground", "--code-bg", "Code blocks"],
+    ["codeInk", "--code-ink", "Text in code blocks"],
+    ["danger", "--danger", "Delete button, Delete menu item"],
+    ["dangerPressed", "--danger-press", "Pressed delete button"],
+    ["onDanger", "--on-danger", "Text on danger"],
+    ["selection", "--selection", "Selected text in the editor"],
+    ["scrim", "--scrim", "Behind dialogs"],
+  ];
+  const light = getComputedStyle(document.getElementById("probe-light"));
+  const dark = getComputedStyle(document.getElementById("probe-dark"));
+  const val = (s, v) => s.getPropertyValue(v).trim();
+  const sw = (c) => `<div class="swatch"><i><b style="background:${c}"></b></i>${c}</div>`;
+  document.querySelector("#color-table tbody").innerHTML = TOKENS.map(([name, v, use]) =>
+    `<tr><td class="tok">${name}<small>${v}</small></td><td>${sw(val(light, v))}</td><td>${sw(val(dark, v))}</td><td>${use}</td></tr>`
+  ).join("");
+
+  const lum = (hex) => {
+    const n = hex.replace("#", "").slice(0, 6);
+    return [0, 2, 4].map((i) => parseInt(n.slice(i, i + 2), 16) / 255)
+      .map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4))
+      .reduce((a, c, i) => a + c * [0.2126, 0.7152, 0.0722][i], 0);
+  };
+  const ratio = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+  const PAIRS = [
+    ["ink on background", "--ink", "--bg"],
+    ["inkMuted on background", "--muted", "--bg"],
+    ["inkMuted on surface", "--muted", "--surface"],
+    ["onHighlight on highlight", "--on-hl", "--hl"],
+    ["onInverse on inverse", "--on-inverse", "--inverse"],
+    ["inverseAccent on inverse", "--inverse-accent", "--inverse"],
+    ["codeInk on codeBackground", "--code-ink", "--code-bg"],
+    ["onDanger on danger", "--on-danger", "--danger"],
+    ["danger on raised", "--danger", "--raised"],
+    ["ink on highlightSoft", "--ink", "--hl-soft"],
+    ["inkFaint on background", "--faint", "--bg", true],
+  ];
+  const cell = (s, fg, bg, deco) => {
+    const f = val(s, fg), b = val(s, bg), r = ratio(f, b);
+    const cls = deco ? "deco" : r >= 4.5 ? "ok" : "lg";
+    return `<td><span class="pair" style="color:${f};background:${b}">Aa</span></td><td><span class="ratio ${cls}">${r.toFixed(1)}:1</span></td>`;
+  };
+  document.querySelector("#contrast-table tbody").innerHTML = PAIRS.map(([label, fg, bg, deco]) =>
+    `<tr><td>${label}${deco ? ' <span style="color:var(--page-muted)">(syntax only)</span>' : ""}</td>${cell(light, fg, bg, deco)}${cell(dark, fg, bg, deco)}</tr>`
+  ).join("");
+
+  document.querySelectorAll("[data-icons]").forEach((el) => {
+    el.innerHTML = window.MK_ICONS.map((id) => `<div><svg class="ico"><use href="#i-${id}"/></svg>${id}</div>`).join("");
+  });
+</script>
+</body>
+</html>
