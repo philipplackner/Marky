@@ -1,6 +1,8 @@
 rootProject.name = "Marky"
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google {
             mavenContent {
@@ -28,4 +30,4 @@ dependencyResolutionManagement {
 }
 
 include(":androidApp")
-include(":shared")
+include(":composeApp")
