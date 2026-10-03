@@ -39,7 +39,7 @@ Rules:
 
 ## Project structure
 
-The repo is still the KMP template (`:shared`, `:androidApp`, `iosApp/`). The target layout follows the `kmp-module-structure` skill: `:shared` becomes `:composeApp`, and Gradle setup moves into `build-logic` convention plugins. Read that skill before adding a module.
+The layout follows the `kmp-module-structure` skill. Gradle setup lives in `build-logic` convention plugins (`kmp.library`, `cmp.library`, `cmp.feature`, `cmp.application`, `android.application(.compose)`, `room`). Package names follow the module path (`:core:domain` → `com.plcoding.marky.core.domain`). Read that skill before adding a module.
 
 | Module | Contains |
 |---|---|
@@ -107,7 +107,7 @@ A unit of work is done only when all of these hold:
 
 1. Every composable (components and screens) has a `@Preview` for each distinct state it can be in (for example empty, filled, pinned, light, dark). The user checks the UI through these previews. Automated visual checks against the designs are out of scope.
 2. Android builds clean: `./gradlew :androidApp:assembleDebug`
-3. iOS builds clean: `./gradlew :composeApp:linkDebugFrameworkIosSimulatorArm64` (`:shared:` until the module is renamed) and `xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -destination 'generic/platform=iOS Simulator' build`
+3. iOS builds clean: `./gradlew :composeApp:linkDebugFrameworkIosSimulatorArm64` and `xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -destination 'generic/platform=iOS Simulator' build`
 4. Unit tests pass on both platforms: `./gradlew allTests` (or per module `testAndroidHostTest` and `iosSimulatorArm64Test`). New logic (ViewModels, parsing, mapping, search ranking, and so on) has unit tests.
 5. Any assumptions are listed under "Assumptions made".
 6. The work is committed.
