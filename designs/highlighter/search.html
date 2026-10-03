@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marky search</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:ital,wght@0,400..800;1,400;1,700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ds.css">
+<link rel="stylesheet" href="site.css">
+<style>
+  .mk .field input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; color: var(--ink); font: inherit; caret-color: var(--ink); }
+  .mk .field input::placeholder { color: var(--muted); }
+  .mk .field:focus-within { background: var(--bg); border-color: var(--ink); }
+  .mk .field .clear { border: 0; background: none; cursor: pointer; padding: 0; }
+  .live figcaption strong::after { content: "Live"; margin-left: 8px; font: 700 11px/1 "Figtree", sans-serif; padding: 3px 7px; border-radius: 6px; background: var(--page-accent); color: #1E1B2E; vertical-align: 2px; }
+</style>
+</head>
+<body data-page="search">
+
+<template id="illus-start"><svg class="illus" viewBox="0 0 120 96"><path class="swash" d="M40 48l24-3"/><circle class="ink" cx="52" cy="42" r="22"/><path class="ink" d="M68 58l20 20"/></svg></template>
+<template id="illus-none"><svg class="illus" viewBox="0 0 120 96"><path class="swash" d="M26 84l34-2"/><circle class="ink" cx="52" cy="42" r="22"/><path class="ink" d="M68 58l20 20"/><path class="ink" d="M42 44c3-4 6 4 10 0s6 4 10 0"/></svg></template>
+
+<main class="wrap">
+  <header class="page-intro">
+    <h1>Search</h1>
+    <p>Full-text search across titles and note text. Notes with a matching title rank above notes that only match in the text. Every match is marked in yellow so users can pick the right note without opening it. The first phone is live: type into it.</p>
+    <nav class="jump"><a href="#states">All states</a></nav>
+  </header>
+
+  <section class="doc-section" id="states">
+    <h2>States</h2>
+    <p>Search opens from the field on the notes list with the keyboard up. Matching ignores case and accents and also finds words that start with the query, so "pack" finds "Packing".</p>
+    <div class="phones">
+
+      <figure class="live">
+        <div class="phone"><div class="screen mk">
+          <div class="bar">
+            <button class="icon-btn" aria-label="Back" data-href="notes-list.html"><svg class="ico"><use href="#i-back"/></svg></button>
+            <label class="field"><svg class="ico"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search notes" autocomplete="off" spellcheck="false"><button class="clear" id="clear" aria-label="Clear" hidden><svg class="ico ico-20"><use href="#i-clear"/></svg></button></label>
+          </div>
+          <div class="scroll" id="results"></div>
+        </div></div>
+        <figcaption><strong>Try it</strong><span>Searches the sample notes from the other pages. Try "lisbon", "pack" or "kyoto".</span></figcaption>
+      </figure>
+
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div class="bar">
+            <button class="icon-btn" aria-label="Back" data-href="notes-list.html"><svg class="ico"><use href="#i-back"/></svg></button>
+            <div class="field is-focused"><svg class="ico"><use href="#i-search"/></svg><span class="ph"><span class="caret" style="margin:0 2px 0 0"></span>Search notes</span></div>
+          </div>
+          <div class="grow">
+            <div class="empty" data-illus="illus-start">
+              <h2>Search your notes</h2>
+              <p>Type a word from any title or note. Notes with a matching title show first.</p>
+            </div>
+          </div>
+          <div class="kbd"></div>
+        </div></div>
+        <figcaption><strong>Start typing</strong><span>The screen opens with the field focused and the keyboard up.</span></figcaption>
+      </figure>
+
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div class="bar">
+            <button class="icon-btn" aria-label="Back" data-href="notes-list.html"><svg class="ico"><use href="#i-back"/></svg></button>
+            <div class="field is-focused"><svg class="ico"><use href="#i-search"/></svg><span class="val">lisbon<span class="caret"></span></span><span class="clear"><svg class="ico ico-20"><use href="#i-clear"/></svg></span></div>
+          </div>
+          <div class="scroll">
+            <div class="section-label" style="padding-top:8px"><span>In titles</span><span>1</span></div>
+            <div class="result" data-href="note.html"><h3>Trip to <mark>Lisbon</mark></h3><p>Flights are booked. Still need the tram pass and a rain jacket.</p></div>
+            <div class="section-label" style="padding-top:18px"><span>In note text</span><span>3</span></div>
+            <div class="result"><h3>Q4 roadmap call</h3><p>…empty states. The offsite in <mark>Lisbon</mark> is still on for November.</p></div>
+            <div class="result"><h3>Reading list</h3><p>…a re-read of Dune, and the Pessoa book I found in <mark>Lisbon</mark>.</p></div>
+          </div>
+          <div class="kbd"></div>
+        </div></div>
+        <figcaption><strong>Results while typing</strong><span>Results update with every keystroke. Title matches first, then text matches, each group sorted by last edit.</span></figcaption>
+      </figure>
+
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div class="bar">
+            <button class="icon-btn" aria-label="Back" data-href="notes-list.html"><svg class="ico"><use href="#i-back"/></svg></button>
+            <div class="field"><svg class="ico"><use href="#i-search"/></svg><span class="val">lisbon</span><span class="clear"><svg class="ico ico-20"><use href="#i-clear"/></svg></span></div>
+          </div>
+          <div class="scroll">
+            <div class="section-label" style="padding-top:8px"><span>In titles</span><span>1</span></div>
+            <div class="result" data-href="note.html"><h3>Trip to <mark>Lisbon</mark></h3><p>Flights are booked. Still need the tram pass and a rain jacket.</p></div>
+            <div class="section-label" style="padding-top:18px"><span>In note text</span><span>3</span></div>
+            <div class="result"><h3>Q4 roadmap call</h3><p>…empty states. The offsite in <mark>Lisbon</mark> is still on for November.</p></div>
+            <div class="result is-pressed"><h3>Reading list</h3><p>…a re-read of Dune, and the Pessoa book I found in <mark>Lisbon</mark>.</p></div>
+            <div class="result"><h3>Gift ideas</h3><p>The blue tiles from <mark>Lisbon</mark> for Ana, a cookbook for Dad, running socks for Sam.</p></div>
+          </div>
+        </div></div>
+        <figcaption><strong>Results, keyboard closed</strong><span>Scrolling the results closes the keyboard. Tapping a result opens the note in Read mode. Shown with one result pressed.</span></figcaption>
+      </figure>
+
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div class="bar">
+            <button class="icon-btn" aria-label="Back" data-href="notes-list.html"><svg class="ico"><use href="#i-back"/></svg></button>
+            <div class="field is-focused"><svg class="ico"><use href="#i-search"/></svg><span class="val">pack<span class="caret"></span></span><span class="clear"><svg class="ico ico-20"><use href="#i-clear"/></svg></span></div>
+          </div>
+          <div class="scroll">
+            <div class="section-label" style="padding-top:8px"><span>In titles</span><span>1</span></div>
+            <div class="result"><h3><mark>Pack</mark>ing for camping</h3><p>Tent, two sleeping mats, the small stove.</p></div>
+            <div class="section-label" style="padding-top:18px"><span>In note text</span><span>1</span></div>
+            <div class="result" data-href="note.html"><h3>Trip to Lisbon</h3><p>…and a rain jacket. <mark>Pack</mark>ing: passport, sunscreen. It's <mark>pack</mark>ed by noon.</p></div>
+          </div>
+          <div class="kbd"></div>
+        </div></div>
+        <figcaption><strong>Partial word</strong><span>Matches at the start of a word are marked up to the typed length. Every match in the snippet is marked, not just the first.</span></figcaption>
+      </figure>
+
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div class="bar">
+            <button class="icon-btn" aria-label="Back" data-href="notes-list.html"><svg class="ico"><use href="#i-back"/></svg></button>
+            <div class="field is-focused"><svg class="ico"><use href="#i-search"/></svg><span class="val">kyoto<span class="caret"></span></span><span class="clear"><svg class="ico ico-20"><use href="#i-clear"/></svg></span></div>
+          </div>
+          <div class="grow">
+            <div class="empty" data-illus="illus-none">
+              <h2>No notes match "kyoto"</h2>
+              <p>Check the spelling, or try a shorter word.</p>
+            </div>
+          </div>
+          <div class="kbd"></div>
+        </div></div>
+        <figcaption><strong>No results</strong><span>Repeats the query so users can spot a typo. The clear button resets to the start state.</span></figcaption>
+      </figure>
+    </div>
+  </section>
+</main>
+
+<script>
+  document.querySelectorAll("[data-illus]").forEach((el) => el.insertAdjacentHTML("afterbegin", document.getElementById(el.dataset.illus).innerHTML));
+
+  const NOTES = [
+    { title: "Trip to Lisbon", text: "Flights are booked. Still need the tram pass and a rain jacket. Packing: passport, adapter plug, sunscreen. Go to Time Out Market early, it's packed by noon.", href: "note.html" },
+    { title: "Weekly groceries", text: "Oat milk, lemons, sourdough, two cans of chickpeas, coffee beans." },
+    { title: "Q4 roadmap call", text: "Ship search before import. Ana owns the empty states. The offsite in Lisbon is still on for November." },
+    { title: "Welcome to Marky", text: "Marky keeps notes as Markdown: plain text with a few symbols for formatting. Pin notes you open often and export any note as .md." },
+    { title: "Reading list", text: "The Overstory, Klara and the Sun, a re-read of Dune, and the Pessoa book I found in Lisbon." },
+    { title: "Gift ideas", text: "The blue tiles from Lisbon for Ana, a cookbook for Dad, running socks for Sam." },
+    { title: "Running plan", text: "Three easy runs, one long run on Sunday. Rest on Monday, stretch after every run." },
+    { title: "Book club questions", text: "Why does the narrator never say her name? Is the ending hopeful?" },
+    { title: "Packing for camping", text: "Tent, two sleeping mats, the small stove." },
+  ];
+
+  const fold = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+
+  function matches(text, q) {
+    const f = fold(text), out = [];
+    let i = f.indexOf(q);
+    while (i !== -1) {
+      if (i === 0 || /[^a-z0-9]/.test(f[i - 1])) out.push(i);
+      i = f.indexOf(q, i + 1);
+    }
+    return out;
+  }
+  function markUp(text, q, hits) {
+    let html = "", last = 0;
+    for (const i of hits) { html += esc(text.slice(last, i)) + "<mark>" + esc(text.slice(i, i + q.length)) + "</mark>"; last = i + q.length; }
+    return html + esc(text.slice(last));
+  }
+  function snippet(text, q, hits) {
+    if (!hits.length) return esc(text);
+    const start = Math.max(0, hits[0] - 32);
+    const cut = start > 0 ? text.indexOf(" ", start) + 1 : 0;
+    const part = text.slice(cut);
+    return (cut > 0 ? "…" : "") + markUp(part, q, matches(part, q));
+  }
+  const empty = (illus, title, body) =>
+    `<div class="grow" style="height:100%"><div class="empty">${document.getElementById(illus).innerHTML}<h2>${title}</h2><p>${body}</p></div></div>`;
+
+  const input = document.getElementById("q"), out = document.getElementById("results"), clear = document.getElementById("clear");
+  function render() {
+    const raw = input.value.trim(), q = fold(raw);
+    clear.hidden = !input.value;
+    if (!q) { out.innerHTML = empty("illus-start", "Search your notes", "Type a word from any title or note. Notes with a matching title show first."); return; }
+    const inTitle = [], inText = [];
+    for (const n of NOTES) {
+      const t = matches(n.title, q), b = matches(n.text, q);
+      if (t.length) inTitle.push({ n, t, b });
+      else if (b.length) inText.push({ n, t, b });
+    }
+    if (!inTitle.length && !inText.length) { out.innerHTML = empty("illus-none", `No notes match "${esc(raw)}"`, "Check the spelling, or try a shorter word."); return; }
+    const item = ({ n, t, b }) => `<div class="result"${n.href ? ` data-href="${n.href}"` : ""}><h3>${markUp(n.title, q, t)}</h3><p>${t.length && !b.length ? esc(n.text) : snippet(n.text, q, b)}</p></div>`;
+    let html = "";
+    if (inTitle.length) html += `<div class="section-label" style="padding-top:8px"><span>In titles</span><span>${inTitle.length}</span></div>` + inTitle.map(item).join("");
+    if (inText.length) html += `<div class="section-label" style="padding-top:${inTitle.length ? 18 : 8}px"><span>In note text</span><span>${inText.length}</span></div>` + inText.map(item).join("");
+    out.innerHTML = html;
+  }
+  input.addEventListener("input", render);
+  clear.addEventListener("click", (e) => { e.preventDefault(); input.value = ""; render(); input.focus(); });
+  render();
+</script>
+<script src="site.js"></script>
+</body>
+</html>
