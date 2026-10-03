@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marky note screen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:ital,wght@0,400..800;1,400;1,700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ds.css">
+<link rel="stylesheet" href="site.css">
+</head>
+<body data-page="note">
+
+<template id="read-bar">
+  <div class="bar"><button class="icon-btn" aria-label="Back" data-href="notes-list.html"><svg class="ico"><use href="#i-back"/></svg></button><span class="spacer"></span><div class="toggle"><button>Write</button><button class="on">Read</button></div><button class="icon-btn" aria-label="More"><svg class="ico"><use href="#i-more-h"/></svg></button></div>
+</template>
+<template id="write-bar">
+  <div class="bar"><button class="icon-btn" aria-label="Back" data-href="notes-list.html"><svg class="ico"><use href="#i-back"/></svg></button><span class="spacer"></span><div class="toggle"><button class="on">Write</button><button>Read</button></div><button class="icon-btn" aria-label="More"><svg class="ico"><use href="#i-more-h"/></svg></button></div>
+</template>
+<template id="lisbon-read">
+  <div class="title-field">Trip to Lisbon</div>
+  <div class="scroll"><div class="md">
+    <p>Flights are <strong>booked</strong>. Still need the <em>tram pass</em>.</p>
+    <h2><span>Packing</span></h2>
+    <ul class="check">
+      <li class="done"><button class="cb x"></button>Passport</li>
+      <li class="done"><button class="cb x"></button>Adapter plug</li>
+      <li><button class="cb"></button>Sunscreen</li>
+      <li><button class="cb"></button>Rain jacket</li>
+    </ul>
+    <blockquote>Go to Time Out Market early. It's packed by noon.</blockquote>
+    <pre>TP 1353  Fri 08:40
+Seat 14C  Gate 07:55</pre>
+    <p><a href="#">Tram 28 route</a></p>
+    <div style="height:48px"></div>
+  </div></div>
+</template>
+<template id="toolbar">
+  <div class="tb">
+    <button class="tb-btn">H</button><button class="tb-btn">B</button><button class="tb-btn"><i>I</i></button>
+    <button class="tb-btn"><svg class="ico"><use href="#i-list"/></svg></button><button class="tb-btn"><svg class="ico"><use href="#i-checklist"/></svg></button>
+    <button class="tb-btn"><svg class="ico"><use href="#i-quote"/></svg></button><button class="tb-btn"><svg class="ico"><use href="#i-code"/></svg></button><button class="tb-btn"><svg class="ico"><use href="#i-link"/></svg></button>
+  </div>
+  <div class="kbd"></div>
+</template>
+
+<main class="wrap">
+  <header class="page-intro">
+    <h1>Note</h1>
+    <p>Where users read and write a single note. Read mode shows the formatted note with tickable checklists and tappable links. Write mode shows the raw Markdown with the formatting toolbar above the keyboard. Changes save automatically. Try ticking the checkboxes in the Read screens.</p>
+    <nav class="jump"><a href="#read">Read mode</a><a href="#write">Write mode</a><a href="#empty">New &amp; empty notes</a><a href="#actions">Actions</a></nav>
+  </header>
+
+  <!-- ============ READ ============ -->
+  <section class="doc-section" id="read">
+    <h2>Read mode</h2>
+    <p>Notes open in Read mode, except a brand-new note, which opens in Write mode.</p>
+    <div class="phones">
+      <figure>
+        <div class="phone"><div class="screen mk" data-fill="read-bar lisbon-read"></div></div>
+        <figcaption><strong>Read</strong><span>Paragraph, H2, checklist, quote, code block and link. Ticking a box writes <code>[x]</code> back to the Markdown.</span></figcaption>
+      </figure>
+
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div data-fill="read-bar"></div>
+          <div class="title-field">Welcome to Marky</div>
+          <div class="scroll"><div class="md">
+            <p>Marky keeps notes as <strong>Markdown</strong>: plain text with a few symbols for formatting. Tap <em>Write</em> to see them.</p>
+            <h1>Heading 1</h1>
+            <h2><span>Heading 2</span></h2>
+            <h3>Heading 3</h3>
+            <p>Text can be <strong>bold</strong>, <em>italic</em> or <code>inline code</code>.</p>
+            <ul class="bullets"><li>A bullet list</li><li>Pin notes you open often</li></ul>
+            <ol><li>A numbered list</li><li>Export any note as .md</li></ol>
+            <ul class="check"><li class="done"><button class="cb x"></button>Open this note</li><li><button class="cb"></button>Tick this box</li></ul>
+            <blockquote>Formatting lives in the text, so your notes work in any editor.</blockquote>
+            <pre>code blocks keep
+  their spacing</pre>
+            <p><a href="#">A link opens in the browser</a></p>
+            <div style="height:48px"></div>
+          </div></div>
+        </div></div>
+        <figcaption><strong>Sample note, all nodes</strong><span>The first-launch note that shows every supported node. Scroll inside the phone to see all of it.</span></figcaption>
+      </figure>
+
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div data-fill="read-bar"></div>
+          <div class="title-field">Trip to Lisbon</div>
+          <div class="scroll"><div class="md">
+            <p>Flights are <strong>booked</strong>. Still need the <em>tram pass</em>.</p>
+            <h2><span>Packing</span></h2>
+            <ul class="check">
+              <li class="done"><button class="cb x"></button>Passport</li>
+              <li class="done"><button class="cb x"></button>Adapter plug</li>
+              <li><button class="cb is-pressed"></button>Sunscreen</li>
+              <li><button class="cb"></button>Rain jacket</li>
+            </ul>
+            <blockquote>Go to Time Out Market early. It's packed by noon.</blockquote>
+            <pre>TP 1353  Fri 08:40
+Seat 14C  Gate 07:55</pre>
+            <p><a href="#" class="is-pressed">Tram 28 route</a></p>
+          </div></div>
+        </div></div>
+        <figcaption><strong>Pressed checkbox and link</strong><span>Touch-down feedback for the two interactive nodes. Links open in the system browser.</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ WRITE ============ -->
+  <section class="doc-section" id="write">
+    <h2>Write mode</h2>
+    <p>Raw Markdown in Figtree. Syntax characters fade to <code>inkFaint</code>; headings, bold and italic keep their look. The toolbar only shows while the keyboard is open.</p>
+    <div class="phones">
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div data-fill="write-bar"></div>
+          <div class="title-field">Trip to Lisbon</div>
+          <div class="scroll"><div class="editor">Flights are <span class="s">**</span><b>booked</b><span class="s">**</span>. Still need the <span class="s">*</span><i>tram pass</i><span class="s">*</span>.
+
+<span class="s">## </span><span class="h2">Packing</span>
+<span class="s">- [x] </span>Passport
+<span class="s">- [x] </span>Adapter plug
+<span class="s">- [ ] </span>Sunscreen
+<span class="s">- [ ] </span>Rain jacket<span class="caret"></span></div></div>
+          <div class="tb">
+            <button class="tb-btn">H</button><button class="tb-btn">B</button><button class="tb-btn"><i>I</i></button>
+            <button class="tb-btn"><svg class="ico"><use href="#i-list"/></svg></button><button class="tb-btn is-active"><svg class="ico"><use href="#i-checklist"/></svg></button>
+            <button class="tb-btn"><svg class="ico"><use href="#i-quote"/></svg></button><button class="tb-btn"><svg class="ico"><use href="#i-code"/></svg></button><button class="tb-btn"><svg class="ico"><use href="#i-link"/></svg></button>
+          </div>
+          <div class="kbd"></div>
+        </div></div>
+        <figcaption><strong>Writing</strong><span>Cursor at the end of a checklist item, so the checklist button is active. Return continues the list with <code>- [ ] </code>.</span></figcaption>
+      </figure>
+
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div data-fill="write-bar"></div>
+          <div class="title-field">Trip to Lisbon</div>
+          <div class="scroll"><div class="editor">Flights are <span class="s">**</span><b>booked</b><span class="s">**</span>. Still need the <span class="s">*</span><i class="sel">tram pass</i><span class="s">*</span>.
+
+<span class="s">## </span><span class="h2">Packing</span>
+<span class="s">- [x] </span>Passport
+<span class="s">- [x] </span>Adapter plug
+<span class="s">- [ ] </span>Sunscreen
+<span class="s">- [ ] </span>Rain jacket</div></div>
+          <div class="tb">
+            <button class="tb-btn">H</button><button class="tb-btn is-pressed">B</button><button class="tb-btn is-active"><i>I</i></button>
+            <button class="tb-btn"><svg class="ico"><use href="#i-list"/></svg></button><button class="tb-btn"><svg class="ico"><use href="#i-checklist"/></svg></button>
+            <button class="tb-btn"><svg class="ico"><use href="#i-quote"/></svg></button><button class="tb-btn"><svg class="ico"><use href="#i-code"/></svg></button><button class="tb-btn"><svg class="ico"><use href="#i-link"/></svg></button>
+          </div>
+          <div class="kbd"></div>
+        </div></div>
+        <figcaption><strong>Text selected</strong><span>"tram pass" is selected and already italic, so I is active. Tapping B wraps the selection in <code>**</code>.</span></figcaption>
+      </figure>
+
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div data-fill="write-bar"></div>
+          <div class="title-field">Trip to Lisbon</div>
+          <div class="scroll"><div class="editor">Flights are <span class="s">**</span><b>booked</b><span class="s">**</span>. Still need the <span class="s">*</span><i>tram pass</i><span class="s">*</span>.
+
+<span class="s">## </span><span class="h2">Packing</span>
+<span class="s">- [x] </span>Passport
+<span class="s">- [x] </span>Adapter plug
+<span class="s">- [ ] </span>Sunscreen
+<span class="s">- [ ] </span>Rain jacket
+
+<span class="s">&gt; </span>Go to Time Out Market early. It's packed by noon.
+
+<span class="s mono">```</span>
+<span class="mono">TP 1353  Fri 08:40</span>
+<span class="mono">Seat 14C  Gate 07:55</span>
+<span class="s mono">```</span>
+
+<span class="s">[</span>Tram 28 route<span class="s">](</span><span class="url">https://carris.pt</span><span class="s">)</span></div></div>
+        </div></div>
+        <figcaption><strong>Keyboard closed</strong><span>Still Write mode, but no toolbar. Tapping the text opens the keyboard again with the cursor where the user tapped.</span></figcaption>
+      </figure>
+
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div data-fill="write-bar"></div>
+          <div class="title-field">Trip to Lisbon<span class="caret"></span></div>
+          <div class="scroll"><div class="editor">Flights are <span class="s">**</span><b>booked</b><span class="s">**</span>. Still need the <span class="s">*</span><i>tram pass</i><span class="s">*</span>.
+
+<span class="s">## </span><span class="h2">Packing</span>
+<span class="s">- [x] </span>Passport
+<span class="s">- [x] </span>Adapter plug</div></div>
+          <div class="tb">
+            <button class="tb-btn" disabled>H</button><button class="tb-btn" disabled>B</button><button class="tb-btn" disabled><i>I</i></button>
+            <button class="tb-btn" disabled><svg class="ico"><use href="#i-list"/></svg></button><button class="tb-btn" disabled><svg class="ico"><use href="#i-checklist"/></svg></button>
+            <button class="tb-btn" disabled><svg class="ico"><use href="#i-quote"/></svg></button><button class="tb-btn" disabled><svg class="ico"><use href="#i-code"/></svg></button><button class="tb-btn" disabled><svg class="ico"><use href="#i-link"/></svg></button>
+          </div>
+          <div class="kbd"></div>
+        </div></div>
+        <figcaption><strong>Editing the title</strong><span>Titles are plain text, so the toolbar stays visible but disabled. Return moves the cursor into the note.</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ NEW & EMPTY ============ -->
+  <section class="doc-section" id="empty">
+    <h2>New &amp; empty notes</h2>
+    <div class="phones">
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div data-fill="write-bar"></div>
+          <div class="title-field"><span class="ph">Title</span></div>
+          <div class="scroll"><div class="editor"><span class="caret" style="margin:0 1px 0 0"></span><span class="ph">Start writing…</span></div></div>
+          <div data-fill="toolbar"></div>
+        </div></div>
+        <figcaption><strong>New note</strong><span>One tap on New note lands here: Write mode, keyboard open, cursor in the text so people can start writing right away. The title is optional.</span></figcaption>
+      </figure>
+
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div data-fill="read-bar"></div>
+          <div class="title-field">Ideas for Sunday</div>
+          <div class="grow">
+            <div class="empty">
+              <svg class="illus" viewBox="0 0 120 96"><rect class="paper ink" x="26" y="8" width="52" height="72" rx="8"/><path class="swash" d="M36 28l26-2"/><path class="ink" d="M36 28h26"/><path class="paper ink" d="M72 76l20-34 8 4.6-20 34-9.5 4.4z"/><path class="ink" d="M88 49l8 4.6"/></svg>
+              <h2>Nothing to read yet</h2>
+              <p>This note has no text. Switch to Write to add some.</p>
+              <div class="actions"><button class="btn btn-primary btn-sm">Start writing</button></div>
+            </div>
+          </div>
+        </div></div>
+        <figcaption><strong>Empty note in Read mode</strong><span>"Start writing" switches to Write mode and opens the keyboard.</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ ACTIONS ============ -->
+  <section class="doc-section" id="actions">
+    <h2>Actions</h2>
+    <p>Pin, export and delete live in the overflow menu. Leaving the screen saves; there is no save button.</p>
+    <div class="phones">
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div class="bar"><button class="icon-btn" aria-label="Back" data-href="notes-list.html"><svg class="ico"><use href="#i-back"/></svg></button><span class="spacer"></span><div class="toggle"><button>Write</button><button class="on">Read</button></div><button class="icon-btn is-pressed" aria-label="More"><svg class="ico"><use href="#i-more-h"/></svg></button></div>
+          <div data-fill="lisbon-read"></div>
+          <div class="menu menu-float">
+            <div class="menu-item"><svg class="ico"><use href="#i-pin"/></svg>Pin note</div>
+            <div class="menu-item"><svg class="ico"><use href="#i-export"/></svg>Export as .md</div>
+            <div class="menu-sep"></div>
+            <div class="menu-item danger"><svg class="ico"><use href="#i-trash"/></svg>Delete note</div>
+          </div>
+        </div></div>
+        <figcaption><strong>Menu</strong><span>For a note that isn't pinned. Tapping outside closes it.</span></figcaption>
+      </figure>
+
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div class="bar"><button class="icon-btn" aria-label="Back" data-href="notes-list.html"><svg class="ico"><use href="#i-back"/></svg></button><span class="spacer"></span><div class="toggle"><button>Write</button><button class="on">Read</button></div><button class="icon-btn is-pressed" aria-label="More"><svg class="ico"><use href="#i-more-h"/></svg></button></div>
+          <div class="title-field">Weekly groceries</div>
+          <div class="scroll"><div class="md">
+            <ul class="check">
+              <li class="done"><button class="cb x"></button>Oat milk</li>
+              <li><button class="cb"></button>Lemons</li>
+              <li><button class="cb"></button>Sourdough</li>
+              <li><button class="cb"></button>Two cans of chickpeas</li>
+              <li class="done"><button class="cb x"></button>Coffee beans</li>
+            </ul>
+          </div></div>
+          <div class="menu menu-float">
+            <div class="menu-item is-pressed"><svg class="ico"><use href="#i-pin-off"/></svg>Unpin note</div>
+            <div class="menu-item"><svg class="ico"><use href="#i-export"/></svg>Export as .md</div>
+            <div class="menu-sep"></div>
+            <div class="menu-item danger"><svg class="ico"><use href="#i-trash"/></svg>Delete note</div>
+          </div>
+        </div></div>
+        <figcaption><strong>Menu, pinned note</strong><span>The first item becomes "Unpin note". Shown with that item pressed.</span></figcaption>
+      </figure>
+
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div data-fill="read-bar lisbon-read"></div>
+          <div class="scrim">
+            <div class="dialog">
+              <h2>Delete "Trip to Lisbon"?</h2>
+              <p>The note will be removed from this device. You can't undo this.</p>
+              <div class="actions"><button class="btn btn-secondary">Cancel</button><button class="btn btn-danger">Delete</button></div>
+            </div>
+          </div>
+        </div></div>
+        <figcaption><strong>Delete confirmation</strong><span>Names the note. After Delete, the app goes back to the notes list.</span></figcaption>
+      </figure>
+
+      <figure>
+        <div class="phone"><div class="screen mk">
+          <div data-fill="read-bar lisbon-read"></div>
+          <div class="snackbar snackbar-float"><span class="msg">Exported "Trip to Lisbon.md"</span></div>
+        </div></div>
+        <figcaption><strong>Exported</strong><span>Shown after the user picks a location in the system save dialog. If they cancel the dialog, nothing is shown.</span></figcaption>
+      </figure>
+    </div>
+  </section>
+</main>
+
+<script>
+  document.querySelectorAll("[data-fill]").forEach((el) => {
+    const html = el.dataset.fill.split(" ").map((id) => document.getElementById(id).innerHTML).join("");
+    if (el.classList.contains("screen")) el.innerHTML = html;
+    else el.outerHTML = html;
+  });
+</script>
+<script src="site.js"></script>
+</body>
+</html>
