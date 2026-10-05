@@ -11,20 +11,33 @@ suspend inline fun <T> safeDbCall(block: suspend () -> Result<T, DataError.Local
     } catch (e: CancellationException) {
         throw e
     } catch (e: SQLiteException) {
-        Result.Error(if (isDiskFullMessage(e.message)) DataError.Local.DISK_FULL else DataError.Local.UNKNOWN)
+        Result.Error(sqliteErrorToDataError(e.message))
     } catch (e: Exception) {
         Result.Error(DataError.Local.UNKNOWN)
     }
 }
 
+private const val SQLITE_FULL = 13
+private const val PRIMARY_RESULT_CODE_MASK = 0xFF
+private val RESULT_CODE_REGEX = Regex("""^Error code: (\d+)""")
+
 /**
- * The bundled driver has no typed exception for SQLITE_FULL (code 13), so the error message
- * is the only signal.
+ * Maps the message of an [SQLiteException] to a [DataError.Local].
+ *
+ * [SQLiteException] has no result code property. The drivers put the code in the message
+ * instead, always formatted as `Error code: <code>, message: <sqlite message>`
+ * (see `androidx.sqlite.throwSQLiteException`). On iOS the code is an extended result code,
+ * so only its lowest byte, the primary code, is compared.
  */
 @PublishedApi
-internal fun isDiskFullMessage(message: String?): Boolean {
-    if (message == null) {
-        return false
+internal fun sqliteErrorToDataError(message: String?): DataError.Local {
+    val resultCode = message
+        ?.let { RESULT_CODE_REGEX.find(it) }
+        ?.groupValues?.get(1)
+        ?.toIntOrNull()
+        ?: return DataError.Local.UNKNOWN
+    return when (resultCode and PRIMARY_RESULT_CODE_MASK) {
+        SQLITE_FULL -> DataError.Local.DISK_FULL
+        else -> DataError.Local.UNKNOWN
     }
-    return message.contains("Error code: 13,") || message.contains("disk is full", ignoreCase = true)
 }
