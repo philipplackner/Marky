@@ -8,14 +8,19 @@ package com.plcoding.marky.core.markdown
  *
  * @return an empty string if the note has no visible text.
  */
-fun String.toPlainPreview(maxLength: Int = 300): String {
-    val document = parseMarkdown(take(PreviewSourceLength))
-    return document.blocks
-        .joinToString(" ") { it.plainText() }
-        .replace(Whitespace, " ")
-        .trim()
-        .take(maxLength)
-}
+fun String.toPlainPreview(maxLength: Int = 300): String =
+    take(PreviewSourceLength).toPlainText().take(maxLength)
+
+/**
+ * The whole note text without Markdown syntax and with line breaks collapsed, as searched
+ * and shown in search snippets.
+ *
+ * @return an empty string if the note has no visible text.
+ */
+fun String.toPlainText(): String = parseMarkdown(this).blocks
+    .joinToString(" ") { it.plainText() }
+    .replace(Whitespace, " ")
+    .trim()
 
 /**
  * The visible text of [inlines] without any syntax.

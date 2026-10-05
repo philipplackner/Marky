@@ -37,4 +37,18 @@ class PlainPreviewTest {
     fun `long text is cut to the max length`() {
         assertThat("word ".repeat(1_000).toPlainPreview(maxLength = 50)).length().isEqualTo(50)
     }
+
+    @Test
+    fun `plain text keeps the whole note`() {
+        val text = "word ".repeat(1_000) + "**Lisbon**"
+        val plain = text.toPlainText()
+        assertThat(plain.length).isEqualTo(5_000 + "Lisbon".length)
+        assertThat(plain.takeLast(6)).isEqualTo("Lisbon")
+    }
+
+    @Test
+    fun `plain text strips syntax like the preview`() {
+        val text = "## Packing\n\n- [x] **Passport**\n\n[Tram 28](https://carris.pt)"
+        assertThat(text.toPlainText()).isEqualTo("Packing Passport Tram 28")
+    }
 }
