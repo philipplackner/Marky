@@ -27,9 +27,13 @@ expect object MarkyDatabaseConstructor : RoomDatabaseConstructor<MarkyDatabase> 
 
 internal const val DATABASE_FILE_NAME = "marky.db"
 
-fun createMarkyDatabase(builder: RoomDatabase.Builder<MarkyDatabase>): MarkyDatabase {
+fun createMarkyDatabase(
+    builder: RoomDatabase.Builder<MarkyDatabase>,
+    callbacks: List<RoomDatabase.Callback> = emptyList(),
+): MarkyDatabase {
     return builder
         .setDriver(BundledSQLiteDriver())
+        .apply { callbacks.forEach(::addCallback) }
         .setQueryCoroutineContext(Dispatchers.IO)
         .build()
 }
