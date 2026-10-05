@@ -508,6 +508,19 @@
 <span class="s">2. </span>Drop bags</div></td><td class="mk"><div class="md"><ol><li>Check in</li><li>Drop bags</li></ol></div></td><td>Typed by hand</td></tr>
           <tr><td>Checklist</td><td class="mk"><div class="editor"><span class="s">- [x] </span>Passport
 <span class="s">- [ ] </span>Sunscreen</div></td><td class="mk"><div class="md"><ul class="check"><li class="done"><button class="cb x"></button>Passport</li><li><button class="cb"></button>Sunscreen</li></ul></div></td><td>Checklist</td></tr>
+          <tr><td>Nested bullet list</td><td class="mk"><div class="editor"><span class="s">- </span>Food
+  <span class="s">- </span>Pastéis de nata
+    <span class="s">- </span>Manteigaria
+<span class="s">- </span>Sights</div></td><td class="mk"><div class="md"><ul class="bullets"><li>Food<ul class="bullets"><li>Pastéis de nata<ul class="bullets"><li>Manteigaria</li></ul></li></ul></li><li>Sights</li></ul></div></td><td>Indent typed by hand</td></tr>
+          <tr><td>Nested numbered list</td><td class="mk"><div class="editor"><span class="s">1. </span>Check in
+   <span class="s">1. </span>Print boarding pass
+   <span class="s">2. </span>Drop bags
+<span class="s">2. </span>Security</div></td><td class="mk"><div class="md"><ol><li>Check in<ol><li>Print boarding pass</li><li>Drop bags</li></ol></li><li>Security</li></ol></div></td><td>Indent typed by hand</td></tr>
+          <tr><td>Mixed nesting</td><td class="mk"><div class="editor"><span class="s">1. </span>Pack
+   <span class="s">- [x] </span>Passport
+   <span class="s">- [ ] </span>Sunscreen
+<span class="s">- [ ] </span>Book tram
+  <span class="s">- </span>Line 28</div></td><td class="mk"><div class="md"><ol><li>Pack<ul class="check"><li class="done"><button class="cb x"></button>Passport</li><li><button class="cb"></button>Sunscreen</li></ul></li></ol><ul class="check"><li><button class="cb"></button>Book tram<ul class="bullets"><li>Line 28</li></ul></li></ul></div></td><td>Indent typed by hand</td></tr>
           <tr><td>Quote</td><td class="mk"><div class="editor"><span class="s">&gt; </span>Go early, it's packed by noon.</div></td><td class="mk"><div class="md"><blockquote>Go early, it's packed by noon.</blockquote></div></td><td>Quote</td></tr>
           <tr><td>Code block</td><td class="mk"><div class="editor"><span class="s mono">```</span>
 <span class="mono">TP 1353  Fri 08:40</span>
@@ -515,6 +528,18 @@
           <tr><td>Link</td><td class="mk"><div class="editor"><span class="s">[</span>Tram 28 route<span class="s">](</span><span class="url">carris.pt</span><span class="s">)</span></div></td><td class="mk"><div class="md"><p><a href="#">Tram 28 route</a></p></div></td><td>Link</td></tr>
         </tbody>
       </table>
+    </div>
+    <div class="doc-sub">
+      <h3>Nested lists</h3>
+      <p>Indent an item with spaces under the item above it to nest it. Bullet, numbered and checklist items can nest inside each other. A child list starts where its parent's text starts: 22 under a bullet, 26 under a number, 34 under a checkbox. Child items keep the 4 gap between items. Bullets change by level: filled <code>ink</code> dot, then an <code>ink</code> ring (1.5 stroke), then a filled <code>muted</code> dot for level 3 and deeper. Numbers look the same at every level. From level 4 on, lists stop indenting further so text keeps enough width on a phone. Checking a parent doesn't change its children.</p>
+      <div class="both">
+        <div class="md" style="padding:0;max-width:340px">
+          <h2><span>Lisbon plan</span></h2>
+          <ul class="bullets"><li>Food<ul class="bullets"><li>Pastéis de nata<ul class="bullets"><li>Manteigaria</li><li>Pastéis de Belém</li></ul></li><li>Grilled sardines</li></ul></li><li>Sights</li></ul>
+          <ol><li>Check in<ol><li>Print boarding pass</li><li>Drop bags</li></ol></li><li>Security<ul class="bullets"><li>Liquids in one bag</li></ul></li></ol>
+          <ul class="check"><li class="done"><button class="cb x"></button>Pack<ul class="check"><li class="done"><button class="cb x"></button>Passport</li><li><button class="cb"></button>Sunscreen</li></ul></li><li><button class="cb"></button>Book tram<ul class="bullets"><li>Line 28 from Martim Moniz</li></ul></li></ul>
+        </div>
+      </div>
     </div>
     <div class="doc-sub">
       <h3>All nodes together</h3>

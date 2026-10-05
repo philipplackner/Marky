@@ -261,14 +261,21 @@
 }
 .mk .md a.is-pressed, .mk a.md-link.is-pressed { background: var(--hl-soft); }
 .mk .md ul, .mk .md ol { list-style: none; }
-.mk .md ul.bullets li { position: relative; padding-left: 22px; }
-.mk .md ul.bullets li + li, .mk .md ol li + li { margin-top: 4px; }
-.mk .md ul.bullets li::before { content: ""; position: absolute; left: 6px; top: 10px; width: 6px; height: 6px; border-radius: 50%; background: var(--ink); }
+.mk .md ul.bullets > li { position: relative; padding-left: 22px; }
+.mk .md ul.bullets > li + li, .mk .md ol > li + li { margin-top: 4px; }
+.mk .md ul.bullets > li::before { content: ""; position: absolute; left: 6px; top: 10px; width: 6px; height: 6px; border-radius: 50%; background: var(--ink); }
 .mk .md ol { counter-reset: n; }
-.mk .md ol li { position: relative; padding-left: 26px; counter-increment: n; }
-.mk .md ol li::before { content: counter(n) "."; position: absolute; left: 2px; font-weight: 700; color: var(--muted); }
-.mk .md ul.check li { display: flex; gap: 12px; align-items: center; padding: 4px 0; }
-.mk .md ul.check li.done { color: var(--muted); }
+.mk .md ol > li { position: relative; padding-left: 26px; counter-increment: n; }
+.mk .md ol > li::before { content: counter(n) "."; position: absolute; left: 2px; font-weight: 700; color: var(--muted); }
+.mk .md ul.check > li { display: flex; gap: 12px; align-items: center; padding: 4px 0; }
+.mk .md ul.check > li.done { color: var(--muted); }
+/* Nested lists: a child list starts where its parent's text starts (22 / 26 / 34px). */
+.mk .md li > ul, .mk .md li > ol { margin-top: 4px; }
+.mk .md ul.check > li { flex-wrap: wrap; }
+.mk .md ul.check > li > ul, .mk .md ul.check > li > ol { flex: 1 0 100%; padding-left: 34px; margin-top: 0; color: var(--ink); }
+.mk .md ul.check > li > ul.check > li:first-child { padding-top: 4px; }
+.mk .md :is(ul, ol) ul.bullets > li::before { background: transparent; border: 1.5px solid var(--ink); }
+.mk .md :is(ul, ol) :is(ul, ol) ul.bullets > li::before { background: var(--muted); border: 0; }
 .mk .md blockquote { position: relative; background: var(--surface); border-radius: 16px; padding: 14px 16px 14px 44px; font-weight: 500; }
 .mk .md blockquote::before { content: "\201C"; position: absolute; left: 12px; top: 4px; font: 800 44px/1 "Bricolage Grotesque", sans-serif; color: var(--hl-deep); }
 .mk .md pre { background: var(--code-bg); color: var(--code-ink); border-radius: 16px; padding: 14px 16px; font: 400 13px/21px "JetBrains Mono", monospace; white-space: pre; overflow: hidden; }
