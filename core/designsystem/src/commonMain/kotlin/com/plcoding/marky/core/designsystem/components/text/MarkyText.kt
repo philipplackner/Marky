@@ -25,6 +25,7 @@ fun MarkyText(
     textAlign: TextAlign? = null,
     maxLines: Int = Int.MAX_VALUE,
     overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
     onTextLayout: (TextLayoutResult) -> Unit = {},
 ) {
     Text(
@@ -35,6 +36,7 @@ fun MarkyText(
         textAlign = textAlign,
         maxLines = maxLines,
         overflow = overflow,
+        softWrap = softWrap,
         onTextLayout = onTextLayout,
     )
 }
@@ -51,6 +53,7 @@ fun MarkyText(
     textAlign: TextAlign? = null,
     maxLines: Int = Int.MAX_VALUE,
     overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
     onTextLayout: (TextLayoutResult) -> Unit = {},
 ) {
     Text(
@@ -61,6 +64,7 @@ fun MarkyText(
         textAlign = textAlign,
         maxLines = maxLines,
         overflow = overflow,
+        softWrap = softWrap,
         onTextLayout = onTextLayout,
     )
 }
