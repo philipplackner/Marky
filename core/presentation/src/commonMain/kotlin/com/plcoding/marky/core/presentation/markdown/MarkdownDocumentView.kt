@@ -96,7 +96,7 @@ private fun spacingBefore(block: MarkdownBlock, previous: MarkdownBlock): Dp = w
         2 -> MarkdownSpacing.beforeHeading2
         else -> MarkdownSpacing.beforeHeading3
     }
-    block.isListItem && previous.isListItem -> MarkdownSpacing.listItem
+    block.isListItem && block::class == previous::class -> MarkdownSpacing.listItem
     else -> MarkdownSpacing.block
 }
 
