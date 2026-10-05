@@ -143,6 +143,7 @@ private fun SnackbarStates() {
         )
         MarkySnackbar(message = "Couldn't read \"ideas.md\". The file may be damaged.")
         MarkySnackbar(message = "Exported \"Trip to Lisbon.md\"")
+        MarkySnackbar(message = "Couldn't export \"Trip to Lisbon.md\". Try again.")
     }
 }
 

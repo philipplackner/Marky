@@ -74,4 +74,6 @@
     <string name="error_import_save">Couldn't import "%1$s". Try again.</string>
     <string name="error_import_disk_full">Couldn't import "%1$s". Free up some storage, then try again.</string>
     <string name="choose_file">Choose file</string>
+    <string name="export_done">Exported "%1$s"</string>
+    <string name="error_export">Couldn't export "%1$s". Try again.</string>
 </resources>

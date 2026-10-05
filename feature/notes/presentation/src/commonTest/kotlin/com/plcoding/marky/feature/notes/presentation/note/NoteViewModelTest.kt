@@ -27,10 +27,12 @@ import com.plcoding.marky.feature.notes.presentation.FakeNoteLocalDataSource
 import com.plcoding.marky.feature.notes.presentation.TestClock
 import com.plcoding.marky.feature.notes.presentation.generated.resources.Res
 import com.plcoding.marky.feature.notes.presentation.generated.resources.error_delete
+import com.plcoding.marky.feature.notes.presentation.generated.resources.error_export
 import com.plcoding.marky.feature.notes.presentation.generated.resources.error_load
 import com.plcoding.marky.feature.notes.presentation.generated.resources.error_pin
 import com.plcoding.marky.feature.notes.presentation.generated.resources.error_save
 import com.plcoding.marky.feature.notes.presentation.generated.resources.error_save_disk_full
+import com.plcoding.marky.feature.notes.presentation.generated.resources.export_done
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -407,6 +409,60 @@ class NoteViewModelTest {
         val viewModel = createViewModel(backgroundScope, note.id)
         assertThat(viewModel.state.value.isNewNote).isFalse()
         assertThat(viewModel.state.value.body.text).isEqualTo(note.content)
+    }
+
+    @Test
+    fun `export sends the title as file name and the text as utf8`() = runTest(testDispatcher) {
+        val note = existingNote(content = "Flights are booked ✈️")
+        val viewModel = createViewModel(backgroundScope, note.id)
+        viewModel.events.test {
+            viewModel.onAction(NoteAction.OnMenuClick)
+            viewModel.onAction(NoteAction.OnExportClick)
+            val event = awaitItem() as NoteEvent.ExportNote
+            assertThat(event.fileName).isEqualTo("Trip to Lisbon.md")
+            assertThat(event.bytes.decodeToString()).isEqualTo("Flights are booked ✈️")
+        }
+        assertThat(viewModel.state.value.isMenuOpen).isFalse()
+    }
+
+    @Test
+    fun `export of an untitled note leaves the file name to the ui`() = runTest(testDispatcher) {
+        val viewModel = createViewModel(backgroundScope)
+        viewModel.onAction(NoteAction.OnTitleChange("   "))
+        viewModel.type("Milk")
+        viewModel.events.test {
+            viewModel.onAction(NoteAction.OnExportClick)
+            assertThat((awaitItem() as NoteEvent.ExportNote).fileName).isNull()
+        }
+    }
+
+    @Test
+    fun `export saves pending edits first and exports them`() = runTest(testDispatcher) {
+        val note = existingNote()
+        val viewModel = createViewModel(backgroundScope, note.id)
+        viewModel.type("Edited just now")
+        viewModel.events.test {
+            viewModel.onAction(NoteAction.OnExportClick)
+            assertThat((awaitItem() as NoteEvent.ExportNote).bytes.decodeToString()).isEqualTo("Edited just now")
+        }
+        assertThat(dataSource.notes.getValue(note.id).content).isEqualTo("Edited just now")
+        waitForAutosave()
+        assertThat(dataSource.upsertCount).isEqualTo(1)
+    }
+
+    @Test
+    fun `saved and failed exports show the final file name`() = runTest(testDispatcher) {
+        val viewModel = createViewModel(backgroundScope, existingNote().id)
+        viewModel.events.test {
+            viewModel.onAction(NoteAction.OnExportSaved("Lisbon (1).md"))
+            val saved = awaitItem()
+            assertThat(saved).isSnackbar(Res.string.export_done)
+            assertThat(((saved as NoteEvent.ShowSnackbar).message as UiText.Resource).args.toList())
+                .containsExactly("Lisbon (1).md")
+
+            viewModel.onAction(NoteAction.OnExportFailed("Trip to Lisbon.md"))
+            assertThat(awaitItem()).isSnackbar(Res.string.error_export)
+        }
     }
 
     private fun assertk.Assert<NoteEvent>.isSnackbar(message: org.jetbrains.compose.resources.StringResource) =

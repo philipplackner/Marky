@@ -16,13 +16,20 @@ import com.plcoding.marky.core.markdown.toggleCheckbox
 import com.plcoding.marky.core.presentation.util.UiText
 import com.plcoding.marky.feature.notes.domain.MarkdownFormatter
 import com.plcoding.marky.feature.notes.domain.continueListOnNewline
+import com.plcoding.marky.feature.notes.domain.encodeMarkdownFile
+import com.plcoding.marky.feature.notes.domain.exportFileName
 import com.plcoding.marky.feature.notes.presentation.generated.resources.Res
 import com.plcoding.marky.feature.notes.presentation.generated.resources.error_delete
+import com.plcoding.marky.feature.notes.presentation.generated.resources.error_export
 import com.plcoding.marky.feature.notes.presentation.generated.resources.error_load
 import com.plcoding.marky.feature.notes.presentation.generated.resources.error_pin
 import com.plcoding.marky.feature.notes.presentation.generated.resources.error_save
 import com.plcoding.marky.feature.notes.presentation.generated.resources.error_save_disk_full
 import com.plcoding.marky.feature.notes.presentation.generated.resources.error_unpin
+import com.plcoding.marky.feature.notes.presentation.generated.resources.export_done
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Instant
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -42,9 +49,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
-import kotlin.time.Clock
-import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Instant
 
 /**
  * Edits one note. Changes save automatically shortly after typing stops, when the app
@@ -109,7 +113,13 @@ class NoteViewModel(
             NoteAction.OnMenuClick -> _state.update { it.copy(isMenuOpen = true) }
             NoteAction.OnMenuDismiss -> _state.update { it.copy(isMenuOpen = false) }
             NoteAction.OnPinClick -> togglePin()
-            NoteAction.OnExportClick -> _state.update { it.copy(isMenuOpen = false) }
+            NoteAction.OnExportClick -> exportNote()
+            is NoteAction.OnExportSaved -> _events.trySend(
+                NoteEvent.ShowSnackbar(UiText.Resource(Res.string.export_done, arrayOf(action.fileName)))
+            )
+            is NoteAction.OnExportFailed -> _events.trySend(
+                NoteEvent.ShowSnackbar(UiText.Resource(Res.string.error_export, arrayOf(action.fileName)))
+            )
             NoteAction.OnDeleteClick -> _state.update { it.copy(isMenuOpen = false, isDeleteDialogVisible = true) }
             NoteAction.OnDeleteDismiss -> _state.update { it.copy(isDeleteDialogVisible = false) }
             NoteAction.OnDeleteConfirm -> deleteNote()
@@ -222,6 +232,21 @@ class NoteViewModel(
                 val message = if (isPinned) Res.string.error_pin else Res.string.error_unpin
                 _events.trySend(NoteEvent.ShowSnackbar(UiText.Resource(message)))
             }
+        }
+    }
+
+    private fun exportNote() {
+        _state.update { it.copy(isMenuOpen = false) }
+        saveJob?.cancel()
+        viewModelScope.launch {
+            save()
+            val state = _state.value
+            _events.trySend(
+                NoteEvent.ExportNote(
+                    fileName = exportFileName(state.title),
+                    bytes = encodeMarkdownFile(state.body.text),
+                )
+            )
         }
     }
 

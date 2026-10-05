@@ -10,10 +10,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -47,10 +47,14 @@ import com.plcoding.marky.core.designsystem.components.snackbar.MarkySnackbarHos
 import com.plcoding.marky.core.designsystem.icon.MarkyIllustrations
 import com.plcoding.marky.core.designsystem.markdown.MarkdownSpacing
 import com.plcoding.marky.core.designsystem.theme.MarkyTheme
+import com.plcoding.marky.core.domain.util.Result
+import com.plcoding.marky.core.files.rememberFileSaver
 import com.plcoding.marky.core.markdown.markdownSyntaxSpans
 import com.plcoding.marky.core.markdown.parseMarkdown
 import com.plcoding.marky.core.presentation.markdown.MarkdownDocumentView
 import com.plcoding.marky.core.presentation.util.ObserveAsEvents
+import com.plcoding.marky.feature.notes.domain.MARKDOWN_EXTENSION
+import com.plcoding.marky.feature.notes.domain.MARKDOWN_MIME_TYPE
 import com.plcoding.marky.feature.notes.domain.MarkdownFormat
 import com.plcoding.marky.feature.notes.presentation.generated.resources.Res
 import com.plcoding.marky.feature.notes.presentation.generated.resources.body_placeholder
@@ -79,6 +83,13 @@ fun NoteRoot(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { MarkySnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val untitled = stringResource(Res.string.untitled)
+    val fileSaver = rememberFileSaver { result ->
+        when (result) {
+            is Result.Success -> viewModel.onAction(NoteAction.OnExportSaved(result.data.name))
+            is Result.Error -> viewModel.onAction(NoteAction.OnExportFailed(result.error.fileName))
+        }
+    }
 
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
@@ -86,6 +97,11 @@ fun NoteRoot(
             is NoteEvent.ShowSnackbar -> scope.launch {
                 snackbarHostState.showSnackbar(event.message.asStringAsync())
             }
+            is NoteEvent.ExportNote -> fileSaver.launch(
+                fileName = event.fileName ?: (untitled + MARKDOWN_EXTENSION),
+                mimeType = MARKDOWN_MIME_TYPE,
+                bytes = event.bytes,
+            )
         }
     }
     LifecycleEventEffect(Lifecycle.Event.ON_STOP) {

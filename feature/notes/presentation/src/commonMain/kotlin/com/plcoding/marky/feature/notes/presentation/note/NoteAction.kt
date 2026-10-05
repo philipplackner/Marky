@@ -16,6 +16,10 @@ sealed interface NoteAction {
     data object OnMenuDismiss : NoteAction
     data object OnPinClick : NoteAction
     data object OnExportClick : NoteAction
+
+    /** @param fileName the name the file was saved under. */
+    data class OnExportSaved(val fileName: String) : NoteAction
+    data class OnExportFailed(val fileName: String) : NoteAction
     data object OnDeleteClick : NoteAction
     data object OnDeleteConfirm : NoteAction
     data object OnDeleteDismiss : NoteAction
