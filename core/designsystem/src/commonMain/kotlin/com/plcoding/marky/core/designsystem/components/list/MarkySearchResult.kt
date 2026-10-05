@@ -13,7 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
 import com.plcoding.marky.core.designsystem.components.text.MarkyHighlightedText
+import com.plcoding.marky.core.designsystem.generated.resources.Res
+import com.plcoding.marky.core.designsystem.generated.resources.no_text_yet
+import com.plcoding.marky.core.designsystem.generated.resources.untitled
 import com.plcoding.marky.core.designsystem.preview.MarkyPreview
 import com.plcoding.marky.core.designsystem.preview.PressedInteractionSource
 import com.plcoding.marky.core.designsystem.theme.MarkySpacing
@@ -23,13 +27,15 @@ import com.plcoding.marky.core.designsystem.theme.MarkyTheme
  * Search hit: title and a snippet of up to two lines, with every match marked in yellow.
  * Put a [MarkyDivider] between results.
  *
+ * @param title null shows "Untitled" in muted.
+ * @param snippet null shows "No text yet" in faint.
  * @param titleMatches Character ranges in [title] to mark.
  * @param snippetMatches Character ranges in [snippet] to mark.
  */
 @Composable
 fun MarkySearchResult(
-    title: String,
-    snippet: String,
+    title: String?,
+    snippet: String?,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     titleMatches: List<IntRange> = emptyList(),
@@ -54,16 +60,16 @@ fun MarkySearchResult(
             ),
         ) {
             MarkyHighlightedText(
-                text = title,
-                highlights = titleMatches,
+                text = title ?: stringResource(Res.string.untitled),
+                highlights = if (title == null) emptyList() else titleMatches,
                 style = typography.titleSmall,
-                color = colors.ink,
+                color = if (title == null) colors.inkMuted else colors.ink,
             )
             MarkyHighlightedText(
-                text = snippet,
-                highlights = snippetMatches,
+                text = snippet ?: stringResource(Res.string.no_text_yet),
+                highlights = if (snippet == null) emptyList() else snippetMatches,
                 style = typography.bodyMedium,
-                color = colors.inkMuted,
+                color = if (snippet == null) colors.inkFaint else colors.inkMuted,
                 modifier = Modifier.padding(top = 2.dp),
                 maxLines = 2,
             )
@@ -96,6 +102,20 @@ private fun SearchResultStates() {
             onClick = {},
             snippetMatches = listOf(textMatchStart until textMatchStart + 6),
             interactionSource = remember { PressedInteractionSource() },
+        )
+        MarkyDivider()
+        MarkySearchResult(
+            title = null,
+            snippet = "Call the landlord about the boiler before Lisbon.",
+            onClick = {},
+            snippetMatches = listOf(42..47),
+        )
+        MarkyDivider()
+        MarkySearchResult(
+            title = "Lisbon",
+            snippet = null,
+            onClick = {},
+            titleMatches = listOf(0..5),
         )
     }
 }

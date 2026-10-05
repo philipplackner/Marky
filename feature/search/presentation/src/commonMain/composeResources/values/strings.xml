@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Back</string>
+    <string name="clear">Clear</string>
+    <string name="search_notes">Search notes</string>
+    <string name="section_in_titles">In titles</string>
+    <string name="section_in_text">In note text</string>
+    <string name="search_start_title">Search your notes</string>
+    <string name="search_start_text">Type a word from any title or note. Notes with a matching title show first.</string>
+    <string name="search_no_results_title">No notes match "%1$s"</string>
+    <string name="search_no_results_text">Check the spelling, or try a shorter word.</string>
+</resources>
