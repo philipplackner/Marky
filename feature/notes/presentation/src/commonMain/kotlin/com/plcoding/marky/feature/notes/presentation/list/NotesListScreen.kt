@@ -12,20 +12,21 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,12 +46,22 @@ import com.plcoding.marky.core.designsystem.components.list.MarkyDivider
 import com.plcoding.marky.core.designsystem.components.list.MarkyNoteRow
 import com.plcoding.marky.core.designsystem.components.list.MarkyPinnedTile
 import com.plcoding.marky.core.designsystem.components.list.MarkySectionLabel
+import com.plcoding.marky.core.designsystem.components.snackbar.MarkySnackbarHost
+import com.plcoding.marky.core.designsystem.components.snackbar.MarkySnackbarHostState
+import com.plcoding.marky.core.designsystem.components.snackbar.MarkySnackbarResult
 import com.plcoding.marky.core.designsystem.icon.MarkyIcons
 import com.plcoding.marky.core.designsystem.icon.MarkyIllustrations
 import com.plcoding.marky.core.designsystem.theme.MarkySpacing
 import com.plcoding.marky.core.designsystem.theme.MarkyTheme
+import com.plcoding.marky.core.domain.util.Result
+import com.plcoding.marky.core.files.FilePickError
+import com.plcoding.marky.core.files.FileType
+import com.plcoding.marky.core.files.rememberFilePicker
+import com.plcoding.marky.core.presentation.util.ObserveAsEvents
+import com.plcoding.marky.feature.notes.domain.MARKDOWN_MIME_TYPE
 import com.plcoding.marky.feature.notes.domain.TimeSinceEdit
 import com.plcoding.marky.feature.notes.presentation.generated.resources.Res
+import com.plcoding.marky.feature.notes.presentation.generated.resources.choose_file
 import com.plcoding.marky.feature.notes.presentation.generated.resources.import_md_file
 import com.plcoding.marky.feature.notes.presentation.generated.resources.new_note
 import com.plcoding.marky.feature.notes.presentation.generated.resources.no_notes_text
@@ -61,6 +72,7 @@ import com.plcoding.marky.feature.notes.presentation.generated.resources.search_
 import com.plcoding.marky.feature.notes.presentation.generated.resources.section_pinned
 import com.plcoding.marky.feature.notes.presentation.generated.resources.section_recent
 import com.plcoding.marky.feature.notes.presentation.util.asString
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -69,16 +81,45 @@ fun NotesListRoot(
     onNoteClick: (noteId: Long) -> Unit,
     onNewNoteClick: () -> Unit,
     onSearchClick: () -> Unit,
-    onImportClick: () -> Unit,
     viewModel: NotesListViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { MarkySnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    val chooseFileLabel = stringResource(Res.string.choose_file)
+    val filePicker = rememberFilePicker(MarkdownFileType) { result ->
+        when (result) {
+            is Result.Success -> viewModel.onAction(NotesListAction.OnFilePicked(result.data.name, result.data.bytes))
+            is Result.Error -> viewModel.onAction(
+                when (val error = result.error) {
+                    is FilePickError.WrongFileType -> NotesListAction.OnWrongFileTypePicked(error.fileName)
+                    is FilePickError.Unreadable -> NotesListAction.OnUnreadableFilePicked(error.fileName)
+                }
+            )
+        }
+    }
+
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            is NotesListEvent.ShowSnackbar -> scope.launch {
+                val result = snackbarHostState.showSnackbar(
+                    message = event.message.asStringAsync(),
+                    actionLabel = if (event.offersChooseFile) chooseFileLabel else null,
+                )
+                if (result == MarkySnackbarResult.ActionPerformed) {
+                    filePicker.launch()
+                }
+            }
+        }
+    }
+
     NotesListScreen(
         state = state,
         onNoteClick = onNoteClick,
         onNewNoteClick = onNewNoteClick,
         onSearchClick = onSearchClick,
-        onImportClick = onImportClick,
+        onImportClick = filePicker::launch,
+        snackbarHostState = snackbarHostState,
     )
 }
 
@@ -89,6 +130,7 @@ fun NotesListScreen(
     onNewNoteClick: () -> Unit,
     onSearchClick: () -> Unit,
     onImportClick: () -> Unit,
+    snackbarHostState: MarkySnackbarHostState,
     listState: LazyListState = rememberLazyListState(),
 ) {
     val isCollapsed by remember(listState) { derivedStateOf { listState.firstVisibleItemIndex > 0 } }
@@ -135,6 +177,14 @@ fun NotesListScreen(
                     .padding(bottom = FabBottomOffset),
             )
         }
+        MarkySnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .windowInsetsPadding(WindowInsets.navigationBars)
+                .padding(horizontal = 12.dp)
+                .padding(bottom = FabBottomOffset),
+        )
     }
 }
 
@@ -233,6 +283,7 @@ private fun NotesList(
                     timestamp = note.timeSinceEdit.asString(),
                     preview = note.preview,
                     onClick = { onNoteClick(note.id) },
+                    isHighlighted = note.id == state.highlightedNoteId,
                 )
                 if (index < state.recentNotes.lastIndex) {
                     MarkyDivider()
@@ -262,6 +313,11 @@ private fun NoNotesState(onNewNoteClick: () -> Unit, onImportClick: () -> Unit) 
         )
     }
 }
+
+private val MarkdownFileType = FileType(
+    extensions = listOf("md"),
+    mimeTypes = listOf(MARKDOWN_MIME_TYPE, "text/plain"),
+)
 
 private val FabBottomOffset = 34.dp
 private val ListBottomSpace = 100.dp
@@ -307,6 +363,7 @@ private fun NotesListPreview(
     state: NotesListState,
     darkTheme: Boolean = false,
     firstVisibleItemIndex: Int = 0,
+    snackbarHostState: MarkySnackbarHostState = remember { MarkySnackbarHostState() },
 ) {
     MarkyTheme(darkTheme = darkTheme) {
         NotesListScreen(
@@ -315,6 +372,7 @@ private fun NotesListPreview(
             onNewNoteClick = {},
             onSearchClick = {},
             onImportClick = {},
+            snackbarHostState = snackbarHostState,
             listState = rememberLazyListState(initialFirstVisibleItemIndex = firstVisibleItemIndex),
         )
     }
@@ -330,6 +388,36 @@ private fun DefaultPreview() {
 @Composable
 private fun DefaultDarkPreview() {
     NotesListPreview(NotesListState(PreviewPinned, PreviewRecent, isLoading = false), darkTheme = true)
+}
+
+@Preview(name = "Just imported", widthDp = 360, heightDp = 780)
+@Composable
+private fun JustImportedPreview() {
+    NotesListPreview(
+        NotesListState(
+            pinnedNotes = PreviewPinned,
+            recentNotes = listOf(NoteUi(20, "ideas", "Half-baked app ideas, collected on the train.", TimeSinceEdit.JustNow)) +
+                PreviewRecent.take(3) +
+                NoteUi(21, "ideas", "Older ideas list. Same title, different note.", TimeSinceEdit.Weeks(3)),
+            isLoading = false,
+            highlightedNoteId = 20,
+        ),
+    )
+}
+
+@Preview(name = "Just imported, dark", widthDp = 360, heightDp = 780)
+@Composable
+private fun JustImportedDarkPreview() {
+    NotesListPreview(
+        NotesListState(
+            pinnedNotes = PreviewPinned,
+            recentNotes = listOf(NoteUi(20, "ideas", "Half-baked app ideas, collected on the train.", TimeSinceEdit.JustNow)) +
+                PreviewRecent.take(3),
+            isLoading = false,
+            highlightedNoteId = 20,
+        ),
+        darkTheme = true,
+    )
 }
 
 @Preview(name = "Scrolled", widthDp = 360, heightDp = 780)

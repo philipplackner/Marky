@@ -69,4 +69,9 @@
     <string name="error_delete">Couldn't delete the note. Try again.</string>
     <string name="error_pin">Couldn't pin the note. Try again.</string>
     <string name="error_unpin">Couldn't unpin the note. Try again.</string>
+    <string name="error_import_wrong_type">Couldn't import "%1$s". Choose a .md file.</string>
+    <string name="error_import_unreadable">Couldn't read "%1$s". The file may be damaged.</string>
+    <string name="error_import_save">Couldn't import "%1$s". Try again.</string>
+    <string name="error_import_disk_full">Couldn't import "%1$s". Free up some storage, then try again.</string>
+    <string name="choose_file">Choose file</string>
 </resources>

@@ -27,7 +27,6 @@ fun App() {
             notesGraph(
                 navController = navController,
                 onSearchClick = { navController.navigate(SearchRoute) },
-                onImportClick = {},
             )
             searchGraph(
                 onBack = { navController.navigateUp() },

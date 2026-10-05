@@ -7,6 +7,7 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.feature.notes.domain)
             implementation(projects.core.markdown)
+            implementation(projects.core.files)
             implementation(libs.kotlinx.coroutines.core)
         }
     }
