@@ -216,13 +216,13 @@
 .mk mark { background: var(--hl); color: var(--on-hl); border-radius: 4px; padding: 0 2px; margin: 0 -1px; }
 
 /* ---------- Formatting toolbar ---------- */
-.mk .tb { display: flex; gap: 5px; padding: 8px 10px; background: var(--bg); border-top: 1px solid var(--rule); }
+.mk .tb { display: flex; gap: 4px; padding: 8px; background: var(--bg); border-top: 1px solid var(--rule); }
 .mk .tb-btn {
-  flex: 1 1 0; min-width: 0; height: 38px; border: 0; border-radius: 12px; cursor: pointer;
+  flex: 1 1 0; min-width: 0; height: 40px; border: 0; border-radius: 12px; cursor: pointer;
   display: grid; place-items: center; background: var(--surface); color: var(--ink);
   font: 800 15px/1 "Figtree", sans-serif; transition: background-color .12s;
 }
-.mk .tb-btn .ico { width: 18px; height: 18px; stroke-width: 2; }
+.mk .tb-btn .ico { width: 16px; height: 16px; stroke-width: 2; }
 .mk .tb-btn.fixed { flex: 0 0 40px; }
 .mk .tb-btn:active, .mk .tb-btn.is-pressed { background: var(--surface-press); }
 .mk .tb-btn.is-active { background: var(--hl); color: var(--on-hl); }
