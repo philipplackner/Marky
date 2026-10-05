@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notes_title">Notes</string>
+    <string name="search_notes">Search notes</string>
+    <string name="search">Search</string>
+    <string name="import_md_file">Import .md file</string>
+    <string name="section_pinned">Pinned</string>
+    <string name="section_recent">Recent</string>
+    <string name="new_note">New note</string>
+    <string name="no_notes_title">No notes yet</string>
+    <string name="no_notes_text">Write your first note, or bring one in from another app as a .md file.</string>
+
+    <string name="time_just_now">Just now</string>
+    <string name="time_minutes">%1$d min</string>
+    <string name="time_hours">%1$d h</string>
+    <string name="time_yesterday">Yesterday</string>
+    <string name="time_days">%1$d d</string>
+    <string name="time_weeks">%1$d w</string>
+    <string name="date_day_month">%1$d %2$s</string>
+    <string name="date_day_month_year">%1$d %2$s %3$d</string>
+    <string name="month_short_1">Jan</string>
+    <string name="month_short_2">Feb</string>
+    <string name="month_short_3">Mar</string>
+    <string name="month_short_4">Apr</string>
+    <string name="month_short_5">May</string>
+    <string name="month_short_6">Jun</string>
+    <string name="month_short_7">Jul</string>
+    <string name="month_short_8">Aug</string>
+    <string name="month_short_9">Sep</string>
+    <string name="month_short_10">Oct</string>
+    <string name="month_short_11">Nov</string>
+    <string name="month_short_12">Dec</string>
+
+    <string name="back">Back</string>
+    <string name="more">More</string>
+    <string name="mode_write">Write</string>
+    <string name="mode_read">Read</string>
+    <string name="title_placeholder">Title</string>
+    <string name="body_placeholder">Start writing…</string>
+    <string name="untitled">Untitled</string>
+    <string name="pin_note">Pin note</string>
+    <string name="unpin_note">Unpin note</string>
+    <string name="export_md">Export as .md</string>
+    <string name="delete_note">Delete note</string>
+    <string name="delete_dialog_title">Delete "%1$s"?</string>
+    <string name="delete_dialog_text">The note will be removed from this device. You can't undo this.</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="nothing_to_read_title">Nothing to read yet</string>
+    <string name="nothing_to_read_text">This note has no text. Switch to Write to add some.</string>
+    <string name="start_writing">Start writing</string>
+
+    <string name="format_heading">Heading</string>
+    <string name="format_bold">Bold</string>
+    <string name="format_italic">Italic</string>
+    <string name="format_list">List</string>
+    <string name="format_checklist">Checklist</string>
+    <string name="format_quote">Quote</string>
+    <string name="format_code">Code</string>
+    <string name="format_link">Link</string>
+    <string name="format_heading_label">H</string>
+    <string name="format_bold_label">B</string>
+    <string name="format_italic_label">I</string>
+    <string name="link_text_placeholder">text</string>
+
+    <string name="error_save_disk_full">Couldn't save the note. Free up some storage, then keep writing.</string>
+    <string name="error_save">Couldn't save the note. Keep writing to try again.</string>
+    <string name="error_load">Couldn't open the note. Go back and try again.</string>
+    <string name="error_delete">Couldn't delete the note. Try again.</string>
+    <string name="error_pin">Couldn't pin the note. Try again.</string>
+    <string name="error_unpin">Couldn't unpin the note. Try again.</string>
+</resources>
