@@ -48,6 +48,7 @@ import com.plcoding.marky.core.designsystem.components.list.MarkySectionLabel
 import com.plcoding.marky.core.designsystem.icon.MarkyIcons
 import com.plcoding.marky.core.designsystem.icon.MarkyIllustrations
 import com.plcoding.marky.core.designsystem.theme.MarkyTheme
+import com.plcoding.marky.core.presentation.navigation.searchFieldSharedBounds
 import com.plcoding.marky.feature.search.presentation.generated.resources.Res
 import com.plcoding.marky.feature.search.presentation.generated.resources.back
 import com.plcoding.marky.feature.search.presentation.generated.resources.clear
@@ -115,6 +116,7 @@ fun SearchScreen(
                 clearContentDescription = stringResource(Res.string.clear),
                 modifier = Modifier
                     .weight(1f)
+                    .then(searchFieldSharedBounds())
                     .focusRequester(focusRequester),
                 keyboardActions = KeyboardActions(onSearch = { keyboardController?.hide() }),
             )

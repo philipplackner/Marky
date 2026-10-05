@@ -1,7 +1,9 @@
 package com.plcoding.marky.feature.search.presentation.navigation
 
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.plcoding.marky.core.presentation.navigation.LocalNavAnimatedVisibilityScope
 import com.plcoding.marky.feature.search.presentation.SearchRoot
 
 /**
@@ -12,6 +14,8 @@ fun NavGraphBuilder.searchGraph(
     onNoteClick: (noteId: Long) -> Unit,
 ) {
     composable<SearchRoute> {
-        SearchRoot(onBackClick = onBack, onNoteClick = onNoteClick)
+        CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this) {
+            SearchRoot(onBackClick = onBack, onNoteClick = onNoteClick)
+        }
     }
 }

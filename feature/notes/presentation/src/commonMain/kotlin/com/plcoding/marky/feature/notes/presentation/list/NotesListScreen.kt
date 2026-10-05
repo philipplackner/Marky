@@ -57,6 +57,7 @@ import com.plcoding.marky.core.domain.util.Result
 import com.plcoding.marky.core.files.FilePickError
 import com.plcoding.marky.core.files.FileType
 import com.plcoding.marky.core.files.rememberFilePicker
+import com.plcoding.marky.core.presentation.navigation.searchFieldSharedBounds
 import com.plcoding.marky.core.presentation.util.ObserveAsEvents
 import com.plcoding.marky.feature.notes.domain.MARKDOWN_MIME_TYPE
 import com.plcoding.marky.feature.notes.domain.TimeSinceEdit
@@ -225,11 +226,13 @@ private fun ListHeader(onSearchClick: () -> Unit) {
         MarkySearchEntry(
             placeholder = stringResource(Res.string.search_notes),
             onClick = onSearchClick,
-            modifier = Modifier.padding(
-                start = MarkySpacing.screenHorizontal,
-                end = MarkySpacing.screenHorizontal,
-                bottom = 18.dp,
-            ),
+            modifier = Modifier
+                .padding(
+                    start = MarkySpacing.screenHorizontal,
+                    end = MarkySpacing.screenHorizontal,
+                    bottom = 18.dp,
+                )
+                .then(searchFieldSharedBounds()),
         )
     }
 }
