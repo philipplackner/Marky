@@ -9,3 +9,7 @@ kotlin {
         }
     }
 }
+
+compose.resources {
+    packageOfResClass = "com.plcoding.marky.core.designsystem.generated.resources"
+}
