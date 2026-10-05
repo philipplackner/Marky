@@ -50,7 +50,8 @@ The layout follows the `kmp-module-structure` skill. Gradle setup lives in `buil
 | `:core:database` | Room database, entities, DAOs |
 | `:core:data` | Repository implementations, mappers |
 | `:core:files` | Our own file picking and saving for `.md` import/export (`expect`/`actual`: Storage Access Framework on Android, `UIDocumentPickerViewController` on iOS) |
-| `:core:presentation` | `UiText`, `ObserveAsEvents`, shared UI helpers |
+| `:core:markdown` | Markdown parsing with JetBrains Markdown into our own document model, plain-text previews, editor syntax spans, checkbox toggling. Pure Kotlin, no UI |
+| `:core:presentation` | `UiText`, `ObserveAsEvents`, shared UI helpers, the Read-mode Markdown renderer that maps the `:core:markdown` model to design-system components |
 | `:core:designsystem` | Theme, tokens, fonts, icon object, all reusable components, Markdown rendering components |
 | `:feature:notes:{domain,data,presentation}` | Notes list, note screen (edit/preview, toolbar), pin, delete, import/export |
 | `:feature:search:{domain,data,presentation}` | Search screen |
@@ -91,6 +92,7 @@ The skills mention things this project doesn't use (networking, preferences stor
 - Room KMP with the bundled SQLite driver and KSP for storing and searching notes.
 - JetBrains Markdown (`org.jetbrains:markdown`) for parsing. Rendering is our own Compose renderer that walks the AST and uses design-system components.
 - Kermit for logging.
+- KotlinX Datetime for local dates ("time since edit").
 - Own `expect`/`actual` code in `:core:files` for file import/export. No file picker library.
 - Tests: `kotlin.test`, AssertK, Turbine, `kotlinx-coroutines-test`, all in `commonTest`.
 

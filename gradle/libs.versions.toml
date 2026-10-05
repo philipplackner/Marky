@@ -12,9 +12,11 @@ androidx-lifecycle = "2.11.0"
 androidx-navigation = "2.9.2"
 assertk = "0.28.1"
 composeMultiplatform = "1.12.1"
+jetbrainsMarkdown = "0.7.16"
 koin = "4.2.2"
 kotlin = "2.4.20"
 kotlinx-coroutines = "1.11.0"
+kotlinx-datetime = "0.8.0"
 kotlinx-serialization = "1.11.0"
 ksp = "2.3.12"
 material3 = "1.12.0-alpha03"
@@ -52,6 +54,10 @@ androidx-navigation-compose = { module = "org.jetbrains.androidx.navigation:navi
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+
+# Markdown
+jetbrains-markdown = { module = "org.jetbrains:markdown", version.ref = "jetbrainsMarkdown" }
 
 # Koin
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
