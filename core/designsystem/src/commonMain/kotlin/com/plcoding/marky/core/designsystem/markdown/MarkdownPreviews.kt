@@ -82,6 +82,76 @@ private fun Checklist() {
 }
 
 @Composable
+private fun NestedLists() {
+    Column(modifier = Modifier.width(PreviewWidth)) {
+        MarkdownBulletItem(
+            text = AnnotatedString("Food"),
+            nested = {
+                Column {
+                    MarkdownBulletItem(
+                        text = AnnotatedString("Pastéis de nata"),
+                        level = 2,
+                        nested = {
+                            Column {
+                                MarkdownBulletItem(
+                                    text = AnnotatedString("Manteigaria"),
+                                    level = 3,
+                                    nested = {
+                                        MarkdownBulletItem(text = AnnotatedString("Level 4 stops indenting"), level = 4)
+                                    },
+                                )
+                                Spacer(modifier = Modifier.height(MarkdownSpacing.listItem))
+                                MarkdownBulletItem(text = AnnotatedString("Pastéis de Belém"), level = 3)
+                            }
+                        },
+                    )
+                    Spacer(modifier = Modifier.height(MarkdownSpacing.listItem))
+                    MarkdownBulletItem(text = AnnotatedString("Grilled sardines"), level = 2)
+                }
+            },
+        )
+        Spacer(modifier = Modifier.height(MarkdownSpacing.listItem))
+        MarkdownBulletItem(text = AnnotatedString("Sights"))
+        Spacer(modifier = Modifier.height(MarkdownSpacing.block))
+        MarkdownNumberedItem(
+            number = 1,
+            text = AnnotatedString("Check in"),
+            nested = {
+                Column {
+                    MarkdownNumberedItem(number = 1, text = AnnotatedString("Print boarding pass"), level = 2)
+                    Spacer(modifier = Modifier.height(MarkdownSpacing.listItem))
+                    MarkdownNumberedItem(number = 2, text = AnnotatedString("Drop bags"), level = 2)
+                }
+            },
+        )
+        Spacer(modifier = Modifier.height(MarkdownSpacing.listItem))
+        MarkdownNumberedItem(
+            number = 2,
+            text = AnnotatedString("Security"),
+            nested = { MarkdownBulletItem(text = AnnotatedString("Liquids in one bag"), level = 2) },
+        )
+        Spacer(modifier = Modifier.height(MarkdownSpacing.block))
+        MarkdownChecklistItem(
+            checked = true,
+            onCheckedChange = {},
+            text = AnnotatedString("Pack"),
+            nested = {
+                Column {
+                    MarkdownChecklistItem(checked = true, onCheckedChange = {}, text = AnnotatedString("Passport"), level = 2)
+                    MarkdownChecklistItem(checked = false, onCheckedChange = {}, text = AnnotatedString("Sunscreen"), level = 2)
+                }
+            },
+        )
+        MarkdownChecklistItem(
+            checked = false,
+            onCheckedChange = {},
+            text = AnnotatedString("Book tram"),
+            nested = { MarkdownBulletItem(text = AnnotatedString("Line 28 from Martim Moniz"), level = 2) },
+        )
+    }
+}
+
+@Composable
 private fun QuoteAndCode() {
     Column(
         modifier = Modifier.width(PreviewWidth),
@@ -241,6 +311,18 @@ private fun ChecklistLightPreview() {
 @Composable
 private fun ChecklistDarkPreview() {
     MarkyPreview(darkTheme = true, padding = 20.dp) { Checklist() }
+}
+
+@Preview(name = "Nested lists · light")
+@Composable
+private fun NestedListsLightPreview() {
+    MarkyPreview(padding = 20.dp) { NestedLists() }
+}
+
+@Preview(name = "Nested lists · dark")
+@Composable
+private fun NestedListsDarkPreview() {
+    MarkyPreview(darkTheme = true, padding = 20.dp) { NestedLists() }
 }
 
 @Preview(name = "Quote and code · light")

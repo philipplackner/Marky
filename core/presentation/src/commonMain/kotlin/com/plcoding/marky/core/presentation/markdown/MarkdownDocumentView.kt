@@ -18,6 +18,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.plcoding.marky.core.designsystem.markdown.MarkdownBulletItem
 import com.plcoding.marky.core.designsystem.markdown.MarkdownChecklistItem
 import com.plcoding.marky.core.designsystem.markdown.MarkdownCodeBlock
@@ -55,13 +56,33 @@ fun MarkdownDocumentView(
     val uriHandler = LocalUriHandler.current
     val safeUriHandler = remember(uriHandler) { SafeUriHandler(uriHandler) }
     CompositionLocalProvider(LocalUriHandler provides safeUriHandler) {
-        Column(modifier = modifier.fillMaxWidth()) {
-            document.blocks.forEachIndexed { index, block ->
-                if (index > 0) {
-                    Spacer(modifier = Modifier.height(spacingBefore(block, document.blocks[index - 1])))
-                }
-                MarkdownBlockView(block = block, styles = styles, onCheckboxToggle = onCheckboxToggle)
+        MarkdownBlocks(
+            blocks = document.blocks,
+            level = 1,
+            styles = styles,
+            onCheckboxToggle = onCheckboxToggle,
+            modifier = modifier,
+        )
+    }
+}
+
+/**
+ * @param level Nesting level of the lists among [blocks], starting at 1.
+ */
+@Composable
+private fun MarkdownBlocks(
+    blocks: List<MarkdownBlock>,
+    level: Int,
+    styles: MarkdownInlineStyles,
+    onCheckboxToggle: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier.fillMaxWidth()) {
+        blocks.forEachIndexed { index, block ->
+            if (index > 0) {
+                Spacer(modifier = Modifier.height(spacingBefore(block, blocks[index - 1])))
             }
+            MarkdownBlockView(block = block, level = level, styles = styles, onCheckboxToggle = onCheckboxToggle)
         }
     }
 }
@@ -69,26 +90,53 @@ fun MarkdownDocumentView(
 @Composable
 private fun MarkdownBlockView(
     block: MarkdownBlock,
+    level: Int,
     styles: MarkdownInlineStyles,
     onCheckboxToggle: (Int) -> Unit,
 ) {
+    val nested: (@Composable () -> Unit)? = block.listChildren.takeIf { it.isNotEmpty() }?.let { children ->
+        {
+            MarkdownBlocks(
+                blocks = children,
+                level = level + 1,
+                styles = styles,
+                onCheckboxToggle = onCheckboxToggle,
+            )
+        }
+    }
     when (block) {
         is MarkdownBlock.Heading -> MarkdownHeading(text = block.content.toAnnotatedString(styles), level = block.level)
         is MarkdownBlock.Paragraph -> MarkdownParagraph(text = block.content.toAnnotatedString(styles))
-        is MarkdownBlock.BulletItem -> MarkdownBulletItem(text = block.content.toAnnotatedString(styles))
+        is MarkdownBlock.BulletItem -> MarkdownBulletItem(
+            text = block.content.toAnnotatedString(styles),
+            level = level,
+            nested = nested,
+        )
         is MarkdownBlock.NumberedItem -> MarkdownNumberedItem(
             number = block.number,
             text = block.content.toAnnotatedString(styles),
+            level = level,
+            nested = nested,
         )
         is MarkdownBlock.ChecklistItem -> MarkdownChecklistItem(
             checked = block.checked,
             onCheckedChange = { onCheckboxToggle(block.checkboxOffset) },
             text = block.content.toAnnotatedString(styles),
+            level = level,
+            nested = nested,
         )
         is MarkdownBlock.Quote -> MarkdownQuote(text = block.content.toAnnotatedString(styles))
         is MarkdownBlock.CodeBlock -> MarkdownCodeBlock(code = block.code)
     }
 }
+
+private val MarkdownBlock.listChildren: List<MarkdownBlock>
+    get() = when (this) {
+        is MarkdownBlock.BulletItem -> children
+        is MarkdownBlock.NumberedItem -> children
+        is MarkdownBlock.ChecklistItem -> children
+        else -> emptyList()
+    }
 
 private fun spacingBefore(block: MarkdownBlock, previous: MarkdownBlock): Dp = when {
     block is MarkdownBlock.Heading -> when (block.level) {
@@ -96,6 +144,8 @@ private fun spacingBefore(block: MarkdownBlock, previous: MarkdownBlock): Dp = w
         2 -> MarkdownSpacing.beforeHeading2
         else -> MarkdownSpacing.beforeHeading3
     }
+    // Checklist items carry their own vertical padding, so they sit flush.
+    block is MarkdownBlock.ChecklistItem && previous is MarkdownBlock.ChecklistItem -> 0.dp
     block.isListItem && block::class == previous::class -> MarkdownSpacing.listItem
     else -> MarkdownSpacing.block
 }
@@ -159,12 +209,36 @@ private val WelcomeNote = """
     |[A link opens in the browser](https://example.com)
 """.trimMargin()
 
+private val NestedListsNote = """
+    |## Lisbon plan
+    |
+    |- Food
+    |  - Pastéis de nata
+    |    - Manteigaria
+    |      - Level 4 stops indenting
+    |    - Pastéis de Belém
+    |  - Grilled sardines
+    |- Sights
+    |
+    |1. Check in
+    |   1. Print boarding pass
+    |   2. Drop bags
+    |2. Security
+    |   - Liquids in one bag
+    |
+    |- [x] Pack
+    |  - [x] Passport
+    |  - [ ] Sunscreen
+    |- [ ] Book tram
+    |  - Line 28 from Martim Moniz
+""".trimMargin()
+
 @Composable
-private fun DocumentPreview(darkTheme: Boolean) {
+private fun DocumentPreview(darkTheme: Boolean, markdown: String = WelcomeNote) {
     MarkyTheme(darkTheme = darkTheme) {
         Box(modifier = Modifier.background(MarkyTheme.colors.background)) {
             MarkdownDocumentView(
-                document = parseMarkdown(WelcomeNote),
+                document = parseMarkdown(markdown),
                 onCheckboxToggle = {},
                 modifier = Modifier.padding(MarkdownSpacing.horizontal),
             )
@@ -182,4 +256,16 @@ private fun MarkdownDocumentViewPreview() {
 @Composable
 private fun MarkdownDocumentViewDarkPreview() {
     DocumentPreview(darkTheme = true)
+}
+
+@Preview(name = "Nested lists", heightDp = 700)
+@Composable
+private fun MarkdownDocumentViewNestedPreview() {
+    DocumentPreview(darkTheme = false, markdown = NestedListsNote)
+}
+
+@Preview(name = "Nested lists, dark", heightDp = 700)
+@Composable
+private fun MarkdownDocumentViewNestedDarkPreview() {
+    DocumentPreview(darkTheme = true, markdown = NestedListsNote)
 }

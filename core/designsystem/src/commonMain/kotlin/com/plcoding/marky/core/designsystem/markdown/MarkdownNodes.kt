@@ -2,6 +2,7 @@ package com.plcoding.marky.core.designsystem.markdown
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,8 +15,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.plcoding.marky.core.designsystem.components.checkbox.MarkyCheckbox
@@ -67,49 +70,84 @@ fun MarkdownParagraph(
 
 /**
  * One `- ` list item with a round bullet.
+ *
+ * @param level How deep the item's list is nested, starting at 1. The bullet is a filled
+ * dot on level 1, a ring on level 2 and a muted dot on level 3 and deeper.
+ * @param nested Blocks indented under the item, such as a nested list.
  */
 @Composable
 fun MarkdownBulletItem(
     text: AnnotatedString,
     modifier: Modifier = Modifier,
+    level: Int = 1,
+    nested: (@Composable () -> Unit)? = null,
 ) {
-    val ink = MarkyTheme.colors.ink
-    Box(modifier = modifier.fillMaxWidth()) {
-        Canvas(
-            modifier = Modifier
-                .offset(x = 6.dp, y = 10.dp)
-                .size(6.dp),
-        ) {
-            drawCircle(color = ink)
+    val colors = MarkyTheme.colors
+    Column(modifier = modifier.fillMaxWidth()) {
+        Box(modifier = Modifier.fillMaxWidth()) {
+            Canvas(
+                modifier = Modifier
+                    .offset(x = 6.dp, y = 10.dp)
+                    .size(6.dp),
+            ) {
+                when (level) {
+                    1 -> drawCircle(color = colors.ink)
+                    2 -> {
+                        val stroke = 1.5.dp.toPx()
+                        drawCircle(
+                            color = colors.ink,
+                            radius = (size.minDimension - stroke) / 2,
+                            style = Stroke(width = stroke),
+                        )
+                    }
+                    else -> drawCircle(color = colors.inkMuted)
+                }
+            }
+            MarkdownParagraph(text = text, modifier = Modifier.padding(start = BulletTextStart))
         }
-        MarkdownParagraph(text = text, modifier = Modifier.padding(start = 22.dp))
+        if (nested != null) {
+            NestedBlocks(level = level, textStart = BulletTextStart, top = MarkdownSpacing.listItem, content = nested)
+        }
     }
 }
 
 /**
  * One `1. ` list item.
+ *
+ * @param level How deep the item's list is nested, starting at 1.
+ * @param nested Blocks indented under the item, such as a nested list.
  */
 @Composable
 fun MarkdownNumberedItem(
     number: Int,
     text: AnnotatedString,
     modifier: Modifier = Modifier,
+    level: Int = 1,
+    nested: (@Composable () -> Unit)? = null,
 ) {
-    Box(modifier = modifier.fillMaxWidth()) {
-        MarkyText(
-            text = "$number.",
-            modifier = Modifier.offset(x = 2.dp),
-            style = MarkyTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-            color = MarkyTheme.colors.inkMuted,
-            maxLines = 1,
-        )
-        MarkdownParagraph(text = text, modifier = Modifier.padding(start = 26.dp))
+    Column(modifier = modifier.fillMaxWidth()) {
+        Box(modifier = Modifier.fillMaxWidth()) {
+            MarkyText(
+                text = "$number.",
+                modifier = Modifier.offset(x = 2.dp),
+                style = MarkyTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                color = MarkyTheme.colors.inkMuted,
+                maxLines = 1,
+            )
+            MarkdownParagraph(text = text, modifier = Modifier.padding(start = NumberTextStart))
+        }
+        if (nested != null) {
+            NestedBlocks(level = level, textStart = NumberTextStart, top = MarkdownSpacing.listItem, content = nested)
+        }
     }
 }
 
 /**
  * One `- [ ] ` / `- [x] ` item. Ticking it should write `[x]` back to the Markdown.
- * Checked items turn muted but are not struck through.
+ * Checked items turn muted but are not struck through. Nested blocks keep their own colors.
+ *
+ * @param level How deep the item's list is nested, starting at 1.
+ * @param nested Blocks indented under the item, such as a nested list.
  */
 @Composable
 fun MarkdownChecklistItem(
@@ -117,29 +155,63 @@ fun MarkdownChecklistItem(
     onCheckedChange: (Boolean) -> Unit,
     text: AnnotatedString,
     modifier: Modifier = Modifier,
+    level: Int = 1,
+    nested: (@Composable () -> Unit)? = null,
 ) {
-    Row(
+    Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
     ) {
-        // The circle takes 22 dp in the layout while its 44 dp touch area overlaps the surroundings.
-        Box(
-            modifier = Modifier
-                .size(22.dp)
-                .wrapContentSize(unbounded = true),
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            MarkyCheckbox(checked = checked, onCheckedChange = onCheckedChange)
+            // The circle takes 22 dp in the layout while its 44 dp touch area overlaps the surroundings.
+            Box(
+                modifier = Modifier
+                    .size(22.dp)
+                    .wrapContentSize(unbounded = true),
+            ) {
+                MarkyCheckbox(checked = checked, onCheckedChange = onCheckedChange)
+            }
+            Spacer(modifier = Modifier.width(12.dp))
+            MarkdownText(
+                text = text,
+                style = MarkyTheme.typography.bodyLarge,
+                color = if (checked) MarkyTheme.colors.inkMuted else MarkyTheme.colors.ink,
+            )
         }
-        Spacer(modifier = Modifier.width(12.dp))
-        MarkdownText(
-            text = text,
-            style = MarkyTheme.typography.bodyLarge,
-            color = if (checked) MarkyTheme.colors.inkMuted else MarkyTheme.colors.ink,
-        )
+        if (nested != null) {
+            NestedBlocks(level = level, textStart = ChecklistTextStart, top = 0.dp, content = nested)
+        }
     }
 }
+
+/**
+ * Lines up nested blocks with the parent item's text. From level 4 on, lists stop
+ * indenting so text keeps enough width on a phone.
+ */
+@Composable
+private fun NestedBlocks(
+    level: Int,
+    textStart: Dp,
+    top: Dp,
+    content: @Composable () -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = if (level < MaxIndentedLevel) textStart else 0.dp, top = top),
+    ) {
+        content()
+    }
+}
+
+private val BulletTextStart = 22.dp
+private val NumberTextStart = 26.dp
+private val ChecklistTextStart = 34.dp
+private const val MaxIndentedLevel = 3
 
 /**
  * `> ` quote: soft surface card with a big quote mark.

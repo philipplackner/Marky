@@ -21,23 +21,33 @@ sealed interface MarkdownBlock {
         val content: List<MarkdownInline>,
     ) : MarkdownBlock
 
+    /**
+     * @property children Blocks indented under this item, such as a nested list.
+     */
     data class BulletItem(
         val content: List<MarkdownInline>,
+        val children: List<MarkdownBlock> = emptyList(),
     ) : MarkdownBlock
 
+    /**
+     * @property children Blocks indented under this item, such as a nested list.
+     */
     data class NumberedItem(
         val number: Int,
         val content: List<MarkdownInline>,
+        val children: List<MarkdownBlock> = emptyList(),
     ) : MarkdownBlock
 
     /**
      * @property checkboxOffset Offset of the `[` of this item's `[ ]` / `[x]` in the
      * source text. Pass it to [toggleCheckbox] to tick or untick the item.
+     * @property children Blocks indented under this item, such as a nested list.
      */
     data class ChecklistItem(
         val checked: Boolean,
         val checkboxOffset: Int,
         val content: List<MarkdownInline>,
+        val children: List<MarkdownBlock> = emptyList(),
     ) : MarkdownBlock
 
     data class Quote(

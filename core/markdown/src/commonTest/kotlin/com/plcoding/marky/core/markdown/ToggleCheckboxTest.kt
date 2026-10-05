@@ -35,4 +35,12 @@ class ToggleCheckboxTest {
         }
         assertThat(toggleCheckbox("[a]", 0)).isEqualTo("[a]")
     }
+
+    @Test
+    fun `nested checkbox is toggled in place`() {
+        val text = "- Pack\n  - [ ] Passport"
+        val nested = (parseMarkdown(text).blocks.single() as MarkdownBlock.BulletItem).children.single()
+        val offset = (nested as MarkdownBlock.ChecklistItem).checkboxOffset
+        assertThat(toggleCheckbox(text, offset)).isEqualTo("- Pack\n  - [x] Passport")
+    }
 }

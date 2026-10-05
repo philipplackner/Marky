@@ -71,20 +71,19 @@ private class DocumentBuilder(private val source: String) {
             val paragraphs = item.children.filter { it.type == MarkdownElementTypes.PARAGRAPH }
             val content = joinLines(paragraphs.map { inlinesOf(it.children) }).trimmed()
             val checkbox = item.children.firstOrNull { it.type == GFMTokenTypes.CHECK_BOX }
+            val children = blocksOf(
+                item.children.filter { it.type != MarkdownElementTypes.PARAGRAPH && it.type !in ListItemMarkers },
+            )
             blocks += when {
                 checkbox != null -> MarkdownBlock.ChecklistItem(
                     checked = checkbox.text().getOrNull(1)?.lowercaseChar() == 'x',
                     checkboxOffset = checkbox.startOffset,
                     content = content,
+                    children = children,
                 )
-                ordered -> MarkdownBlock.NumberedItem(number = number ?: 1, content = content)
-                else -> MarkdownBlock.BulletItem(content)
+                ordered -> MarkdownBlock.NumberedItem(number = number ?: 1, content = content, children = children)
+                else -> MarkdownBlock.BulletItem(content = content, children = children)
             }
-            // Read mode has no nested lists, so nested blocks follow their parent item.
-            val nested = item.children.filter {
-                it.type != MarkdownElementTypes.PARAGRAPH && it.type !in ListItemMarkers
-            }
-            blocks += blocksOf(nested)
         }
         return blocks
     }

@@ -153,11 +153,61 @@ class ParseMarkdownTest {
     }
 
     @Test
-    fun `nested list items follow their parent`() {
+    fun `nested bullet items become children of their parent`() {
         assertThat(blocks("- parent\n  - child\n- next")).containsExactly(
-            BulletItem(listOf(Text("parent"))),
-            BulletItem(listOf(Text("child"))),
+            BulletItem(listOf(Text("parent")), children = listOf(BulletItem(listOf(Text("child"))))),
             BulletItem(listOf(Text("next"))),
+        )
+    }
+
+    @Test
+    fun `lists nest three levels deep`() {
+        assertThat(blocks("- Food\n  - Pastéis de nata\n    - Manteigaria\n- Sights")).containsExactly(
+            BulletItem(
+                listOf(Text("Food")),
+                children = listOf(
+                    BulletItem(
+                        listOf(Text("Pastéis de nata")),
+                        children = listOf(BulletItem(listOf(Text("Manteigaria")))),
+                    ),
+                ),
+            ),
+            BulletItem(listOf(Text("Sights"))),
+        )
+    }
+
+    @Test
+    fun `nested numbered items keep their own numbering`() {
+        assertThat(blocks("1. Check in\n   1. Print boarding pass\n   2. Drop bags\n2. Security")).containsExactly(
+            NumberedItem(
+                number = 1,
+                content = listOf(Text("Check in")),
+                children = listOf(
+                    NumberedItem(number = 1, content = listOf(Text("Print boarding pass"))),
+                    NumberedItem(number = 2, content = listOf(Text("Drop bags"))),
+                ),
+            ),
+            NumberedItem(number = 2, content = listOf(Text("Security"))),
+        )
+    }
+
+    @Test
+    fun `different list kinds nest inside each other`() {
+        val text = "1. Pack\n   - [x] Passport\n- [ ] Book tram\n  - Line 28"
+        assertThat(blocks(text)).containsExactly(
+            NumberedItem(
+                number = 1,
+                content = listOf(Text("Pack")),
+                children = listOf(
+                    ChecklistItem(checked = true, checkboxOffset = text.indexOf("[x]"), content = listOf(Text("Passport"))),
+                ),
+            ),
+            ChecklistItem(
+                checked = false,
+                checkboxOffset = text.indexOf("[ ]"),
+                content = listOf(Text("Book tram")),
+                children = listOf(BulletItem(listOf(Text("Line 28")))),
+            ),
         )
     }
 

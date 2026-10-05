@@ -33,12 +33,15 @@ fun plainText(inlines: List<MarkdownInline>): String = inlines.joinToString("") 
 private fun MarkdownBlock.plainText(): String = when (this) {
     is MarkdownBlock.Heading -> plainText(content)
     is MarkdownBlock.Paragraph -> plainText(content)
-    is MarkdownBlock.BulletItem -> plainText(content)
-    is MarkdownBlock.NumberedItem -> plainText(content)
-    is MarkdownBlock.ChecklistItem -> plainText(content)
+    is MarkdownBlock.BulletItem -> withChildren(plainText(content), children)
+    is MarkdownBlock.NumberedItem -> withChildren(plainText(content), children)
+    is MarkdownBlock.ChecklistItem -> withChildren(plainText(content), children)
     is MarkdownBlock.Quote -> plainText(content)
     is MarkdownBlock.CodeBlock -> code
 }
+
+private fun withChildren(text: String, children: List<MarkdownBlock>): String =
+    (listOf(text) + children.map { it.plainText() }).joinToString(" ")
 
 private const val PreviewSourceLength = 2_000
 private val Whitespace = Regex("\\s+")

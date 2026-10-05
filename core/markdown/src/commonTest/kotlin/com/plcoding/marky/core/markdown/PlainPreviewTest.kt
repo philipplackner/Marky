@@ -16,6 +16,12 @@ class PlainPreviewTest {
     }
 
     @Test
+    fun `nested list items appear after their parent`() {
+        assertThat("- Food\n  - [ ] Nata\n    1. Belém\n- Sights".toPlainPreview())
+            .isEqualTo("Food Nata Belém Sights")
+    }
+
+    @Test
     fun `empty or syntax only text gives an empty preview`() {
         assertThat("".toPlainPreview()).isEmpty()
         assertThat("  \n\n\t ".toPlainPreview()).isEmpty()
