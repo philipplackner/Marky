@@ -70,6 +70,7 @@ internal fun rememberMarkyFonts(): MarkyFonts {
         Font(Res.font.figtree, FontWeight.ExtraBold),
         Font(Res.font.figtree_italic, FontWeight.Normal, FontStyle.Italic),
         Font(Res.font.figtree_italic, FontWeight.Bold, FontStyle.Italic),
+        Font(Res.font.figtree_italic, FontWeight.ExtraBold, FontStyle.Italic),
     )
     val jetBrainsMono = FontFamily(
         Font(Res.font.jetbrains_mono, FontWeight.Normal),
