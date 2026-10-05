@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -58,22 +60,25 @@ private fun SegmentedToggle(
         shape = MarkyShapes.pill,
         color = MarkyTheme.colors.surface,
     ) {
-        Row(
-            modifier = Modifier
-                .padding(3.dp)
-                .selectableGroup(),
-        ) {
-            options.forEachIndexed { index, label ->
-                ToggleOption(
-                    label = label,
-                    selected = index == selectedIndex,
-                    onClick = { if (index != selectedIndex) onSelect(index) },
-                    interactionSource = if (index == pressedIndex) {
-                        remember { PressedInteractionSource() }
-                    } else {
-                        remember { MutableInteractionSource() }
-                    },
-                )
+        // Clickable M3 surfaces grow to a 48 dp touch target, which would make the toggle taller than designed.
+        CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
+            Row(
+                modifier = Modifier
+                    .padding(3.dp)
+                    .selectableGroup(),
+            ) {
+                options.forEachIndexed { index, label ->
+                    ToggleOption(
+                        label = label,
+                        selected = index == selectedIndex,
+                        onClick = { if (index != selectedIndex) onSelect(index) },
+                        interactionSource = if (index == pressedIndex) {
+                            remember { PressedInteractionSource() }
+                        } else {
+                            remember { MutableInteractionSource() }
+                        },
+                    )
+                }
             }
         }
     }

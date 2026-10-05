@@ -10,8 +10,10 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -82,11 +84,14 @@ fun MarkySnackbar(
                 color = colors.onInverse,
             )
             if (actionLabel != null) {
-                SnackbarAction(
-                    label = actionLabel,
-                    onClick = onActionClick,
-                    interactionSource = actionInteractionSource,
-                )
+                // Clickable M3 surfaces grow to a 48 dp touch target, which would make the snackbar taller than designed.
+                CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
+                    SnackbarAction(
+                        label = actionLabel,
+                        onClick = onActionClick,
+                        interactionSource = actionInteractionSource,
+                    )
+                }
             }
         }
     }
