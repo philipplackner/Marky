@@ -135,17 +135,31 @@ class App : Application() {
 }
 ```
 
-### iOS (`:composeApp` — `iosMain`)
+### iOS (`iosApp/iOSApp.swift`)
 
-```kotlin
-fun MainViewController() = ComposeUIViewController(
-    configure = { initKoin() }
-) {
-    App()
+Start Koin in the `init` of the SwiftUI `App` struct, so it runs once at app launch before any view controller exists:
+
+```swift
+import SwiftUI
+import ComposeApp
+
+@main
+struct iOSApp: App {
+    init() {
+        InitKoinKt.doInitKoin(config: nil)
+    }
+
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
+    }
 }
 ```
 
-`configure` runs once before the first composition. Start Koin in exactly one place per platform — don't also call it from Swift.
+Kotlin/Native exports a top-level function from `InitKoin.kt` on the `InitKoinKt` class and prefixes names that start with `init` with `do`, so `initKoin` becomes `doInitKoin`. Swift doesn't see Kotlin default arguments, so pass `config: nil` explicitly.
+
+`MainViewController()` in `iosMain` stays a plain `ComposeUIViewController { App() }`. Don't start Koin there with `configure`: the view controller can be created more than once, and a second `startKoin` throws. Start Koin in exactly one place per platform.
 
 ---
 
