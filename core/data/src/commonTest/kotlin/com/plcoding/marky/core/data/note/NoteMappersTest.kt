@@ -23,6 +23,20 @@ class NoteMappersTest {
     }
 
     @Test
+    fun `search text is the content without markdown syntax`() {
+        val note = Note(
+            id = 1,
+            title = "",
+            content = "# Plan\nwo*rd* with **bold** and `code`\n- [ ] item",
+            createdAt = Instant.fromEpochMilliseconds(0),
+            lastEditedAt = Instant.fromEpochMilliseconds(0),
+            isPinned = false
+        )
+
+        assertThat(note.toNoteEntity().searchText).isEqualTo("Plan word with bold and code item")
+    }
+
+    @Test
     fun `sub-millisecond precision is dropped when storing`() {
         val note = Note(
             id = 1,

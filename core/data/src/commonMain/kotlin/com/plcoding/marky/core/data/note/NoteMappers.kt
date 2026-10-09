@@ -2,6 +2,7 @@ package com.plcoding.marky.core.data.note
 
 import com.plcoding.marky.core.database.note.NoteEntity
 import com.plcoding.marky.core.domain.note.Note
+import com.plcoding.marky.core.markdown.toPlainText
 import kotlin.time.Instant
 
 fun NoteEntity.toNote(): Note {
@@ -20,6 +21,7 @@ fun Note.toNoteEntity(): NoteEntity {
         id = id,
         title = title,
         content = content,
+        searchText = content.toPlainText(),
         createdAt = createdAt.toEpochMilliseconds(),
         lastEditedAt = lastEditedAt.toEpochMilliseconds(),
         isPinned = isPinned

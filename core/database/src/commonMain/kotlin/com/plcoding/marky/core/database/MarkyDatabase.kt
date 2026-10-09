@@ -13,7 +13,7 @@ import kotlinx.coroutines.IO
 
 @Database(
     entities = [NoteEntity::class, NoteFtsEntity::class],
-    version = 1
+    version = 2
 )
 @ConstructedBy(MarkyDatabaseConstructor::class)
 abstract class MarkyDatabase : RoomDatabase() {
@@ -33,6 +33,7 @@ fun createMarkyDatabase(
 ): MarkyDatabase {
     return builder
         .setDriver(BundledSQLiteDriver())
+        .fallbackToDestructiveMigration(dropAllTables = true)
         .apply { callbacks.forEach(::addCallback) }
         .setQueryCoroutineContext(Dispatchers.IO)
         .build()

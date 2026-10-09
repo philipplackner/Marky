@@ -13,6 +13,7 @@ data class NoteEntity(
     val id: Long = 0,
     val title: String,
     val content: String,
+    val searchText: String,
     val createdAt: Long,
     val lastEditedAt: Long,
     val isPinned: Boolean

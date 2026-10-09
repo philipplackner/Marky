@@ -8,24 +8,44 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Instant
 
 /**
- * Inserts the sample notes when the database file is first created, so new users
- * never start with an empty list.
+ * Inserts the sample notes when the database file is first created, or recreated after
+ * a schema change, so users never start with an empty list.
  */
 internal class SampleNotesCallback(
     private val clock: Clock,
 ) : RoomDatabase.Callback() {
 
+    private var wasRecreated = false
+
     override fun onCreate(connection: SQLiteConnection) {
+        insertSamples(connection)
+    }
+
+    // Room drops the tables before this call and creates them again after it, so the
+    // samples are inserted once the database is open.
+    override fun onDestructiveMigration(connection: SQLiteConnection) {
+        wasRecreated = true
+    }
+
+    override fun onOpen(connection: SQLiteConnection) {
+        if (wasRecreated) {
+            wasRecreated = false
+            insertSamples(connection)
+        }
+    }
+
+    private fun insertSamples(connection: SQLiteConnection) {
         sampleNotes(clock.now()).forEach { note ->
             val entity = note.toNoteEntity()
             connection.prepare(
-                "INSERT INTO notes (title, content, createdAt, lastEditedAt, isPinned) VALUES (?, ?, ?, ?, ?)"
+                "INSERT INTO notes (title, content, searchText, createdAt, lastEditedAt, isPinned) VALUES (?, ?, ?, ?, ?, ?)"
             ).use { statement ->
                 statement.bindText(1, entity.title)
                 statement.bindText(2, entity.content)
-                statement.bindLong(3, entity.createdAt)
-                statement.bindLong(4, entity.lastEditedAt)
-                statement.bindBoolean(5, entity.isPinned)
+                statement.bindText(3, entity.searchText)
+                statement.bindLong(4, entity.createdAt)
+                statement.bindLong(5, entity.lastEditedAt)
+                statement.bindBoolean(6, entity.isPinned)
                 statement.step()
             }
         }
