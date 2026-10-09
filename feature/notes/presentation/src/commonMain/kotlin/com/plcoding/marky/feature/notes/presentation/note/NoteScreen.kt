@@ -1,6 +1,7 @@
 package com.plcoding.marky.feature.notes.presentation.note
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -24,12 +25,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -129,6 +133,12 @@ fun NoteScreen(
     var focusBody by remember { mutableStateOf(state.isNewNote) }
     val linkTextPlaceholder = stringResource(Res.string.link_text_placeholder)
     val isKeyboardOpen = isKeyboardVisible()
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusBodyAtEnd: () -> Unit by rememberUpdatedState {
+        onAction(NoteAction.OnBodyChange(state.body.copy(selection = TextRange(state.body.text.length))))
+        bodyFocusRequester.requestFocus()
+        keyboardController?.show()
+    }
 
     LaunchedEffect(focusBody, state.mode, state.isLoading) {
         if (focusBody && state.mode == NoteMode.Write && !state.isLoading) {
@@ -193,7 +203,14 @@ fun NoteScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .verticalScroll(rememberScrollState()),
+                            .verticalScroll(rememberScrollState())
+                            .then(
+                                if (state.mode == NoteMode.Write) {
+                                    Modifier.pointerInput(Unit) { detectTapGestures { focusBodyAtEnd() } }
+                                } else {
+                                    Modifier
+                                },
+                            ),
                     ) {
                         titleField()
                         when (state.mode) {
