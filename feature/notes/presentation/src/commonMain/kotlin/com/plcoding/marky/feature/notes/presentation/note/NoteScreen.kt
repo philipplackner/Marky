@@ -137,29 +137,30 @@ fun NoteScreen(
         }
     }
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MarkyTheme.colors.background)
-            .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal)),
+            .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))
+            .windowInsetsPadding(WindowInsets.ime.union(WindowInsets.navigationBars)),
     ) {
-        Column(
+        NoteTopBar(
+            mode = state.mode,
+            isPinned = state.isPinned,
+            isMenuOpen = state.isMenuOpen,
+            onBackClick = onBackClick,
+            onModeSelect = { onAction(NoteAction.OnModeSelect(it)) },
+            onMenuClick = { onAction(NoteAction.OnMenuClick) },
+            onMenuDismiss = { onAction(NoteAction.OnMenuDismiss) },
+            onPinClick = { onAction(NoteAction.OnPinClick) },
+            onExportClick = { onAction(NoteAction.OnExportClick) },
+            onDeleteClick = { onAction(NoteAction.OnDeleteClick) },
+        )
+        Box(
             modifier = Modifier
-                .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.ime.union(WindowInsets.navigationBars)),
+                .weight(1f)
+                .fillMaxWidth(),
         ) {
-            NoteTopBar(
-                mode = state.mode,
-                isPinned = state.isPinned,
-                isMenuOpen = state.isMenuOpen,
-                onBackClick = onBackClick,
-                onModeSelect = { onAction(NoteAction.OnModeSelect(it)) },
-                onMenuClick = { onAction(NoteAction.OnMenuClick) },
-                onMenuDismiss = { onAction(NoteAction.OnMenuDismiss) },
-                onPinClick = { onAction(NoteAction.OnPinClick) },
-                onExportClick = { onAction(NoteAction.OnExportClick) },
-                onDeleteClick = { onAction(NoteAction.OnDeleteClick) },
-            )
             if (!state.isLoading) {
                 val titleField = @Composable {
                     MarkyTitleField(
@@ -179,17 +180,19 @@ fun NoteScreen(
                     )
                 }
                 if (state.mode == NoteMode.Read && state.body.text.isBlank()) {
-                    titleField()
-                    NothingToRead(
-                        onStartWritingClick = {
-                            focusBody = true
-                            onAction(NoteAction.OnStartWritingClick)
-                        },
-                    )
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        titleField()
+                        NothingToRead(
+                            onStartWritingClick = {
+                                focusBody = true
+                                onAction(NoteAction.OnStartWritingClick)
+                            },
+                        )
+                    }
                 } else {
                     Column(
                         modifier = Modifier
-                            .weight(1f)
+                            .fillMaxSize()
                             .verticalScroll(rememberScrollState()),
                     ) {
                         titleField()
@@ -214,22 +217,21 @@ fun NoteScreen(
                         }
                     }
                 }
-                if (state.mode == NoteMode.Write && isKeyboardOpen) {
-                    FormattingToolbar(
-                        activeFormats = if (isTitleFocused) emptySet() else state.activeFormats,
-                        enabled = !isTitleFocused,
-                        onFormatClick = { onAction(NoteAction.OnFormatClick(it, linkTextPlaceholder)) },
-                    )
-                }
             }
+            MarkySnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(horizontal = 12.dp, vertical = 16.dp),
+            )
         }
-        MarkySnackbarHost(
-            hostState = snackbarHostState,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .windowInsetsPadding(WindowInsets.ime.union(WindowInsets.navigationBars))
-                .padding(horizontal = 12.dp, vertical = 16.dp),
-        )
+        if (!state.isLoading && state.mode == NoteMode.Write && isKeyboardOpen) {
+            FormattingToolbar(
+                activeFormats = if (isTitleFocused) emptySet() else state.activeFormats,
+                enabled = !isTitleFocused,
+                onFormatClick = { onAction(NoteAction.OnFormatClick(it, linkTextPlaceholder)) },
+            )
+        }
     }
 
     if (state.isDeleteDialogVisible) {
