@@ -13,10 +13,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -62,7 +65,7 @@ fun MarkdownParagraph(
 ) {
     MarkdownText(
         text = text,
-        style = MarkyTheme.typography.bodyLarge,
+        style = bodyTextStyle(),
         color = MarkyTheme.colors.ink,
         modifier = modifier,
     )
@@ -178,7 +181,7 @@ fun MarkdownChecklistItem(
             Spacer(modifier = Modifier.width(12.dp))
             MarkdownText(
                 text = text,
-                style = MarkyTheme.typography.bodyLarge,
+                style = bodyTextStyle(),
                 color = if (checked) MarkyTheme.colors.inkMuted else MarkyTheme.colors.ink,
             )
         }
@@ -213,13 +216,28 @@ private val NumberTextStart = 26.dp
 private val ChecklistTextStart = 34.dp
 private const val MaxIndentedLevel = 3
 
+private val LocalInsideQuote = compositionLocalOf { false }
+
+/**
+ * Body text style of paragraphs and list items. Inside a quote it takes the quote's
+ * medium weight.
+ */
+@Composable
+private fun bodyTextStyle(): TextStyle {
+    val style = MarkyTheme.typography.bodyLarge
+    return if (LocalInsideQuote.current) style.copy(fontWeight = FontWeight.Medium) else style
+}
+
 /**
  * `> ` quote: soft surface card with a big quote mark.
+ *
+ * @param content The quoted blocks. Their body text takes the quote's medium weight;
+ * headings and code keep their own styles.
  */
 @Composable
 fun MarkdownQuote(
-    text: AnnotatedString,
     modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
 ) {
     val colors = MarkyTheme.colors
     val fonts = MarkyTheme.fonts
@@ -241,12 +259,11 @@ fun MarkdownQuote(
                 ),
                 color = colors.quoteMark,
             )
-            MarkdownText(
-                text = text,
-                style = MarkyTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium),
-                color = colors.ink,
-                modifier = Modifier.padding(start = 44.dp, top = 14.dp, end = 16.dp, bottom = 14.dp),
-            )
+            Box(modifier = Modifier.padding(start = 44.dp, top = 14.dp, end = 16.dp, bottom = 14.dp)) {
+                CompositionLocalProvider(LocalInsideQuote provides true) {
+                    content()
+                }
+            }
         }
     }
 }

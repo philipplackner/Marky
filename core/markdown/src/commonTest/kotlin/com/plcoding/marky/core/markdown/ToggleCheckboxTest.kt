@@ -37,6 +37,14 @@ class ToggleCheckboxTest {
     }
 
     @Test
+    fun `checkbox inside a quote is toggled in place`() {
+        val text = "> Pack\n>\n> - [ ] Passport"
+        val quoted = (parseMarkdown(text).blocks.single() as MarkdownBlock.Quote).children.last()
+        val offset = (quoted as MarkdownBlock.ChecklistItem).checkboxOffset
+        assertThat(toggleCheckbox(text, offset)).isEqualTo("> Pack\n>\n> - [x] Passport")
+    }
+
+    @Test
     fun `nested checkbox is toggled in place`() {
         val text = "- Pack\n  - [ ] Passport"
         val nested = (parseMarkdown(text).blocks.single() as MarkdownBlock.BulletItem).children.single()

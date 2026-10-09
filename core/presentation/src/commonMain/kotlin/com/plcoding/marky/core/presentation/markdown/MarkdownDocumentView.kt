@@ -125,7 +125,14 @@ private fun MarkdownBlockView(
             level = level,
             nested = nested,
         )
-        is MarkdownBlock.Quote -> MarkdownQuote(text = block.content.toAnnotatedString(styles))
+        is MarkdownBlock.Quote -> MarkdownQuote {
+            MarkdownBlocks(
+                blocks = block.children,
+                level = level,
+                styles = styles,
+                onCheckboxToggle = onCheckboxToggle,
+            )
+        }
         is MarkdownBlock.CodeBlock -> MarkdownCodeBlock(code = block.code)
     }
 }
@@ -233,6 +240,28 @@ private val NestedListsNote = """
     |  - Line 28 from Martim Moniz
 """.trimMargin()
 
+private val QuoteNote = """
+    |> Go **early**, it's packed by noon.
+    |> It's worth the queue.
+    |
+    |> Before you go:
+    |>
+    |> - [x] Passport
+    |> - [ ] Sunscreen
+    |>   - Factor 50
+    |>
+    |> 1. Check in
+    |> 2. Security
+    |>
+    |> ### Flight
+    |>
+    |> ```
+    |> TP 1353  Fri 08:40
+    |> ```
+    |>
+    |> > Nested quote
+""".trimMargin()
+
 @Composable
 private fun DocumentPreview(darkTheme: Boolean, markdown: String = WelcomeNote) {
     MarkyTheme(darkTheme = darkTheme) {
@@ -268,4 +297,16 @@ private fun MarkdownDocumentViewNestedPreview() {
 @Composable
 private fun MarkdownDocumentViewNestedDarkPreview() {
     DocumentPreview(darkTheme = true, markdown = NestedListsNote)
+}
+
+@Preview(name = "Blocks in quotes", heightDp = 700)
+@Composable
+private fun MarkdownDocumentViewQuotePreview() {
+    DocumentPreview(darkTheme = false, markdown = QuoteNote)
+}
+
+@Preview(name = "Blocks in quotes, dark", heightDp = 700)
+@Composable
+private fun MarkdownDocumentViewQuoteDarkPreview() {
+    DocumentPreview(darkTheme = true, markdown = QuoteNote)
 }

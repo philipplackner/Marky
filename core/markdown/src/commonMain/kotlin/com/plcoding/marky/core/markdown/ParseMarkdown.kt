@@ -36,10 +36,11 @@ private class DocumentBuilder(private val source: String) {
         MarkdownElementTypes.PARAGRAPH -> listOf(MarkdownBlock.Paragraph(inlinesOf(node.children).trimmed()))
         MarkdownElementTypes.UNORDERED_LIST -> listItems(node, ordered = false)
         MarkdownElementTypes.ORDERED_LIST -> listItems(node, ordered = true)
-        MarkdownElementTypes.BLOCK_QUOTE -> listOf(MarkdownBlock.Quote(quoteContent(node).trimmed()))
+        MarkdownElementTypes.BLOCK_QUOTE ->
+            if (node.isQuoteMarker()) emptyList() else listOf(MarkdownBlock.Quote(blocksOf(node.children)))
         MarkdownElementTypes.CODE_FENCE -> listOf(MarkdownBlock.CodeBlock(fenceCode(node)))
         MarkdownElementTypes.CODE_BLOCK -> listOf(MarkdownBlock.CodeBlock(indentedCode(node)))
-        MarkdownTokenTypes.EOL, MarkdownTokenTypes.WHITE_SPACE -> emptyList()
+        MarkdownTokenTypes.BLOCK_QUOTE, MarkdownTokenTypes.EOL, MarkdownTokenTypes.WHITE_SPACE -> emptyList()
         else -> {
             val raw = node.text().trim()
             if (raw.isEmpty()) emptyList() else listOf(MarkdownBlock.Paragraph(listOf(MarkdownInline.Text(raw))))
@@ -72,7 +73,9 @@ private class DocumentBuilder(private val source: String) {
             val content = joinLines(paragraphs.map { inlinesOf(it.children) }).trimmed()
             val checkbox = item.children.firstOrNull { it.type == GFMTokenTypes.CHECK_BOX }
             val children = blocksOf(
-                item.children.filter { it.type != MarkdownElementTypes.PARAGRAPH && it.type !in ListItemMarkers },
+                item.children.filter {
+                    it.type != MarkdownElementTypes.PARAGRAPH && it.type !in ListItemMarkers && !it.isQuoteMarker()
+                },
             )
             blocks += when {
                 checkbox != null -> MarkdownBlock.ChecklistItem(
@@ -88,28 +91,25 @@ private class DocumentBuilder(private val source: String) {
         return blocks
     }
 
-    private fun quoteContent(quote: ASTNode): List<MarkdownInline> {
-        val parts = quote.children.mapNotNull { child ->
-            when {
-                child.type == MarkdownElementTypes.PARAGRAPH -> inlinesOf(child.children)
-                child.type == MarkdownElementTypes.BLOCK_QUOTE && child.children.isNotEmpty() -> quoteContent(child)
-                child.type in Separators || child.isQuoteMarker() -> null
-                else -> child.text().trim().takeIf { it.isNotEmpty() }?.let { listOf(MarkdownInline.Text(it)) }
-            }
-        }
-        return joinLines(parts)
-    }
-
-    private fun fenceCode(fence: ASTNode): String {
-        val content = fence.children.filter { it.type == MarkdownTokenTypes.CODE_FENCE_CONTENT }
-        if (content.isEmpty()) return ""
-        return source.substring(content.first().startOffset, content.last().endOffset)
-    }
+    private fun fenceCode(fence: ASTNode): String =
+        codeLines(fence, MarkdownTokenTypes.CODE_FENCE_CONTENT) { it.text() }
 
     private fun indentedCode(block: ASTNode): String =
-        block.text().lines().joinToString("\n") { line ->
-            line.removePrefix("    ").removePrefix("\t")
-        }.trimEnd()
+        codeLines(block, MarkdownTokenTypes.CODE_LINE) { it.text().removePrefix("    ").removePrefix("\t") }.trimEnd()
+
+    /**
+     * The code from the first to the last [lineType] child with the line breaks between
+     * them. Everything else, like the `> ` markers of a quoted code block, is dropped.
+     */
+    private fun codeLines(block: ASTNode, lineType: IElementType, lineText: (ASTNode) -> String): String {
+        val lines = block.children.filter { it.type == lineType || it.type == MarkdownTokenTypes.EOL }
+        val first = lines.indexOfFirst { it.type == lineType }
+        if (first == -1) return ""
+        val last = lines.indexOfLast { it.type == lineType }
+        return lines.subList(first, last + 1).joinToString("") { line ->
+            if (line.type == MarkdownTokenTypes.EOL) "\n" else lineText(line)
+        }
+    }
 
     private fun inlinesOf(nodes: List<ASTNode>): List<MarkdownInline> {
         val inlines = mutableListOf<MarkdownInline>()
@@ -187,7 +187,6 @@ private class DocumentBuilder(private val source: String) {
             MarkdownTokenTypes.EOL,
             MarkdownTokenTypes.WHITE_SPACE,
         )
-        val Separators: Set<IElementType> = setOf(MarkdownTokenTypes.EOL, MarkdownTokenTypes.WHITE_SPACE)
     }
 }
 

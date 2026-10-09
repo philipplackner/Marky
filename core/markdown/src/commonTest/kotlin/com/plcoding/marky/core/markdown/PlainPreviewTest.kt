@@ -22,6 +22,11 @@ class PlainPreviewTest {
     }
 
     @Test
+    fun `blocks inside a quote are joined like top-level blocks`() {
+        assertThat("> Go **early**\n>\n> - [ ] Nata\n> ## Belém".toPlainPreview()).isEqualTo("Go early Nata Belém")
+    }
+
+    @Test
     fun `empty or syntax only text gives an empty preview`() {
         assertThat("".toPlainPreview()).isEmpty()
         assertThat("  \n\n\t ".toPlainPreview()).isEmpty()

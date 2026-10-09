@@ -157,8 +157,28 @@ private fun QuoteAndCode() {
         modifier = Modifier.width(PreviewWidth),
         verticalArrangement = Arrangement.spacedBy(MarkdownSpacing.block),
     ) {
-        MarkdownQuote(text = AnnotatedString("Go early, it's packed by noon."))
+        MarkdownQuote { MarkdownParagraph(text = AnnotatedString("Go early, it's packed by noon.")) }
         MarkdownCodeBlock(code = "TP 1353  Fri 08:40\nSeat 14C  Gate 07:55  -> Terminal 1, a long line that is cut off")
+    }
+}
+
+@Composable
+private fun QuoteWithBlocks() {
+    MarkdownQuote(modifier = Modifier.width(PreviewWidth)) {
+        Column {
+            MarkdownParagraph(text = AnnotatedString("Before you go:"))
+            Spacer(modifier = Modifier.height(MarkdownSpacing.block))
+            MarkdownChecklistItem(checked = true, onCheckedChange = {}, text = AnnotatedString("Passport"))
+            MarkdownChecklistItem(checked = false, onCheckedChange = {}, text = AnnotatedString("Sunscreen"))
+            Spacer(modifier = Modifier.height(MarkdownSpacing.block))
+            MarkdownBulletItem(text = AnnotatedString("Line 28 from Martim Moniz"))
+            Spacer(modifier = Modifier.height(MarkdownSpacing.listItem))
+            MarkdownNumberedItem(number = 1, text = AnnotatedString("Check in"))
+            Spacer(modifier = Modifier.height(MarkdownSpacing.beforeHeading3))
+            MarkdownHeading(text = AnnotatedString("Flight"), level = 3)
+            Spacer(modifier = Modifier.height(MarkdownSpacing.block))
+            MarkdownCodeBlock(code = "TP 1353  Fri 08:40")
+        }
     }
 }
 
@@ -191,7 +211,7 @@ private fun AllNodes() {
         Spacer(modifier = Modifier.height(MarkdownSpacing.listItem))
         MarkdownBulletItem(text = AnnotatedString("Export any note as .md"))
         Spacer(modifier = Modifier.height(MarkdownSpacing.block))
-        MarkdownQuote(text = AnnotatedString("Formatting lives in the text."))
+        MarkdownQuote { MarkdownParagraph(text = AnnotatedString("Formatting lives in the text.")) }
         Spacer(modifier = Modifier.height(MarkdownSpacing.block))
         MarkdownCodeBlock(code = "# Heading\n**bold** and *italic*")
         Spacer(modifier = Modifier.height(MarkdownSpacing.block))
@@ -335,6 +355,18 @@ private fun QuoteAndCodeLightPreview() {
 @Composable
 private fun QuoteAndCodeDarkPreview() {
     MarkyPreview(darkTheme = true, padding = 20.dp) { QuoteAndCode() }
+}
+
+@Preview(name = "Quote with blocks · light")
+@Composable
+private fun QuoteWithBlocksLightPreview() {
+    MarkyPreview(padding = 20.dp) { QuoteWithBlocks() }
+}
+
+@Preview(name = "Quote with blocks · dark")
+@Composable
+private fun QuoteWithBlocksDarkPreview() {
+    MarkyPreview(darkTheme = true, padding = 20.dp) { QuoteWithBlocks() }
 }
 
 @Preview(name = "All nodes · light")

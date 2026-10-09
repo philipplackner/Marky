@@ -41,7 +41,7 @@ private fun MarkdownBlock.plainText(): String = when (this) {
     is MarkdownBlock.BulletItem -> withChildren(plainText(content), children)
     is MarkdownBlock.NumberedItem -> withChildren(plainText(content), children)
     is MarkdownBlock.ChecklistItem -> withChildren(plainText(content), children)
-    is MarkdownBlock.Quote -> plainText(content)
+    is MarkdownBlock.Quote -> children.joinToString(" ") { it.plainText() }
     is MarkdownBlock.CodeBlock -> code
 }
 

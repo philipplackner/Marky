@@ -50,8 +50,11 @@ sealed interface MarkdownBlock {
         val children: List<MarkdownBlock> = emptyList(),
     ) : MarkdownBlock
 
+    /**
+     * @param children The quoted blocks: paragraphs, lists, headings, code or nested quotes.
+     */
     data class Quote(
-        val content: List<MarkdownInline>,
+        val children: List<MarkdownBlock>,
     ) : MarkdownBlock
 
     data class CodeBlock(

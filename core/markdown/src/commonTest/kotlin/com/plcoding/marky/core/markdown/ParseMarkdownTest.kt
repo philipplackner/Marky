@@ -214,8 +214,63 @@ class ParseMarkdownTest {
     @Test
     fun `quote joins its lines without markers`() {
         assertThat(blocks("> Go **early**.\n> It's packed")).containsExactly(
-            Quote(listOf(Text("Go "), Bold(listOf(Text("early"))), Text(".\nIt's packed"))),
+            Quote(listOf(Paragraph(listOf(Text("Go "), Bold(listOf(Text("early"))), Text(".\nIt's packed"))))),
         )
+    }
+
+    @Test
+    fun `quote holds lists and checklists`() {
+        val text = "> - [ ] todo\n> - item two\n>   - nested\n>\n> 1. one\n> 2. two"
+        assertThat(blocks(text)).containsExactly(
+            Quote(
+                listOf(
+                    ChecklistItem(checked = false, checkboxOffset = text.indexOf("[ ]"), content = listOf(Text("todo"))),
+                    BulletItem(content = listOf(Text("item two")), children = listOf(BulletItem(listOf(Text("nested"))))),
+                    NumberedItem(number = 1, content = listOf(Text("one"))),
+                    NumberedItem(number = 2, content = listOf(Text("two"))),
+                ),
+            ),
+        )
+    }
+
+    @Test
+    fun `quote holds headings and paragraphs separated by blank quote lines`() {
+        assertThat(blocks("> ## Head\n> text\n>\n> more")).containsExactly(
+            Quote(
+                listOf(
+                    Heading(level = 2, content = listOf(Text("Head"))),
+                    Paragraph(listOf(Text("text"))),
+                    Paragraph(listOf(Text("more"))),
+                ),
+            ),
+        )
+    }
+
+    @Test
+    fun `quoted code drops the quote markers and keeps indentation`() {
+        assertThat(blocks("> ```\n> keep\n>   spacing\n> ```")).containsExactly(
+            Quote(listOf(CodeBlock("keep\n  spacing"))),
+        )
+        assertThat(blocks(">     indented\n>     more")).containsExactly(
+            Quote(listOf(CodeBlock("indented\nmore"))),
+        )
+    }
+
+    @Test
+    fun `quotes nest`() {
+        assertThat(blocks("> outer\n> > inner\n> > more")).containsExactly(
+            Quote(
+                listOf(
+                    Paragraph(listOf(Text("outer"))),
+                    Quote(listOf(Paragraph(listOf(Text("inner\nmore"))))),
+                ),
+            ),
+        )
+    }
+
+    @Test
+    fun `quote marker alone is an empty quote`() {
+        assertThat(blocks(">")).containsExactly(Quote(emptyList()))
     }
 
     @Test
